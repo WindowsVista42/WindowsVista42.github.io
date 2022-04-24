@@ -1,5 +1,9 @@
 /* Basic */
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+$foregroundcolor: #eeeeee;
+$backgroundcolor: #dddddd;
+
 html {
     font-family: -apple-system, BlinkMacSystemFont, 'Montserrat', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     /* 1 */
@@ -11,11 +15,19 @@ html {
 
 body {
     margin: 0;
-    background: #ffffff;
+    background: foregroundcolor;
     color: #333;
     font-size: 18px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  background-color: backgroundcolor;
+  width: 100%;
+  max-width: 40em;
+  padding: 0 1em;
+  margin: 0 auto;
 }
 
 article,
@@ -34,16 +46,10 @@ summary {
     display: block;
 }	
 
-.container {
-    max-width: 42em;
-    margin: 0 auto;
-}
-
 main {
     outline:none;
 }
 
-/* Headers */
 h1 {
     font-size: 1.35em;
 }
@@ -55,8 +61,6 @@ h2 {
 h3 {
     font-size: 1.1em;
 }
-
-/* Links */
 
 a {
     color: #1d60a3;
@@ -111,7 +115,6 @@ p {
   color: black;
 }
 
-/* Table */
 .table-wrapper {
     overflow-x: auto;
 }
@@ -130,7 +133,6 @@ th, td {
     border: 1px double lightgrey;
 }
 
-/* Code */
 pre {
     padding: 1em;
     background-color: #f1f1f1;
@@ -145,8 +147,6 @@ kbd {
     font-size: 0.90em;
     line-height: 154%;
 }
-
-/* Styles */
 
 blockquote {
     border-left: 2px solid #cccccc;
@@ -168,8 +168,6 @@ hr {
 ul ol, ol ol, ul ul {
     margin: 0em 2em;
 }
-
-/* Header */
 
 header {
     display: flex;
@@ -208,7 +206,6 @@ header a {
     white-space: nowrap;
 }
 
-/* Pages */
 main h1 {
     margin-top: 1em;
     font-weight: normal;
@@ -220,9 +217,6 @@ main h1 {
 .post-short-list:first-of-type {
     margin-top: 1em;
 }
-
-/* Articles */
-
 
 article:not(:last-of-type) {
     border-bottom: thin solid #f1f1f1;
@@ -320,14 +314,11 @@ article img {
     display: block;
 }
 
-/* Other pages */
 .terms {
     list-style-type: none;
     padding: 0;
     line-height: 2em;
 }
-
-/* Pagination */
 
 .pagination {
     display: flex;
@@ -357,8 +348,6 @@ article img {
     border-bottom: 0;
 }
 
-/* Footer */
-
 footer {
     border-top: thin solid #f1f1f1;
     margin-top: 3em;
@@ -374,8 +363,6 @@ ul.language-select {
 ul.language-select > li {
     margin-right: 1em;
 }
-
-/* Media Queries */
 
 @media (max-width: 840px) {
     .main-wrapper {
