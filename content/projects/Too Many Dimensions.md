@@ -1,6 +1,6 @@
 +++
-title = "Post Zero"
-date = 2020-06-06
+title = "Too Many Dimensions"
+date = 2020-11-01
 
 [taxonomies]
 tags = [ "engine", "rendering" ]
