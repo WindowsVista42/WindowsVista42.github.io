@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+
+  <title>Lizard Wizard</title>
+  <meta name="description" content="All things game and game engine">
+
+  <link rel="stylesheet" href="https://WindowsVista42.github.io/main.css">
+
+  
+      <link rel="alternate" type="application/atom+xml" title="RSS" href="https://WindowsVista42.github.io/atom.xml">
+  
+
+  
+  
+</head>
+<body>
+  <div class="container">
+    <header> 
+      <h1 class="site-header">
+        <a href="https:&#x2F;&#x2F;WindowsVista42.github.io">WindowsVista42</a>
+      </h1>
+      <nav>
+        
+        
+        
+        <a  href="https:&#x2F;&#x2F;WindowsVista42.github.io&#x2F;projects&#x2F;">Projects</a>
+        
+        
+        <a  href="https:&#x2F;&#x2F;WindowsVista42.github.io&#x2F;articles&#x2F;">Articles</a>
+        
+        
+        <a  href="https:&#x2F;&#x2F;WindowsVista42.github.io&#x2F;tags&#x2F;">Tags</a>
+        
+        
+      </nav>
+    </header>
+    
+
+<article class="post">
+    <header>
+      
+        <div class="top">
+          <h1>Lizard Wizard</h1>
+          <h2> 1 July 2021</h2>
+        </div>
+      
+    </header>
+    <div class="content">
+        <p><a href="https://github.com/WindowsVista42/Lizard-Wizard-Parberry-4210">Repository Link</a><br />
+A game created by me, Ethan Flute, and Solomon Weatherby for Ian Parberry's 4210 Intro to Game Programming I.</p>
+<span id="continue-reading"></span><h2 id="what-is-it">What is it</h2>
+<p>The premise of Lizard Wizard was that you were a lizard who happened to be a wizard, and you would have to fight through dungeons to get to the next level and eventually beat the game.
+At the end of each of these levels you would have some kind of boss that you would have to kill to proceed and the end of the game you would have a larger bigger badder boss to fight.</p>
+<p>In short, it was set up to be a 3D roguelike, and we had roughly 3 months to implement everything.</p>
+<h2 id="rendering">Rendering</h2>
+<p>The first problem that had to be tackled for this project was to build a prototype 3D renderer for visualization. Parberry's game engine used
+<a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/what-is-directx-12-"><strong>DirectX12</strong></a> under the hood, and more specifically
+<a href="https://github.com/microsoft/DirectXTK12"><strong>DirectX12TK</strong></a>. To build a 3D renderer in his engine, I first had to extend the <strong>LRenderer3D</strong> class and add the necessary
+stuff to get 3D rendering up and running. I won't go into the details of how DirectX12 works here, but for the prototype renderer I used DirectX12TK's
+<a href="https://github.com/microsoft/DirectXTK12/wiki/PrimitiveBatch"><strong>Primitive Batch</strong></a>. This allowed me and my team to push some vertex info to the GPU while I got to work on
+a deferred renderer.</p>
+<p>The rendering architecture I decided on for was a <a href="https://en.wikipedia.org/wiki/Deferred_shading"><strong>deferred renderer</strong></a>. The benefit of this kind of approach
+is that you get all of the vertex information after all of the vertices have been processed. Because of this, you don't have to worry about any data dependence
+and you can process all rendering effects as post process effects. In the case of Lizard Wizard, this allowed me to create some simple lighting,
+and my own take on <a href="https://en.wikipedia.org/wiki/Ambient_occlusion"><strong>ambient occlusion</strong></a>. I chose this kind of architecture because our target platform was
+high performance desktop PC's, and the high memory bandwidth usage isn't as much of a problem like it would be on mobile.</p>
+<p>// PUT SOME IMPLEMENTATION DETAILS / CODE HERE</p>
+<h2 id="entity-component-system">Entity Component System</h2>
+<p>For this project I also built an <a href="https://en.wikipedia.org/wiki/Entity_component_system"><strong>entity component system</strong></a> as a way to learn how the technology works,
+and to help us manage all of the stuff we would have in the scene.
+The entity component system was broken down into three sections, entities, tables and groups.</p>
+<p>An <strong>Entity</strong> in our system was a globally unique identifier for a thing in the scene, typically these would consist of 
+A <strong>Table</strong> in our system was a list of components which, under the hood, was essentially an std::unordered_map mapping entities to components.
+A <strong>Group</strong> in our system was where this all came together. Groups were a way to organize given entities into groups of similar functionality.</p>
+<p>This was all combined with some helper functions like:</p>
+<pre><code>template &lt;typename F&gt;
+Ecs::ApplyEvery(Group group, F f) {
+  &#x2F;* function details *&#x2F;
+}
+</code></pre>
+<p>That would take a given group, a function, and apply that function to every member of the group.</p>
+<p>One common way all of this was used was to iterate over the currently active entities of some type (denoted in a group), and apply some kind of update function to them.</p>
+<pre data-lang="c++" class="language-c++ "><code class="language-c++" data-lang="c++">&#x2F;&#x2F; In Model.h
+&#x2F;&#x2F; Instance of a model
+&#x2F;&#x2F; We store the index of the model we want to render as,
+&#x2F;&#x2F; and we store the model matrix
+struct ModelInstance {
+    u32 model;      &#x2F;&#x2F; model to render with
+    u32 texture;    &#x2F;&#x2F; texture to render with
+    Vec3 glow;      &#x2F;&#x2F; surface glow
+    XMMATRIX world; &#x2F;&#x2F; world matrix in world * view * projection
+};
+
+&#x2F;&#x2F; In Renderer.h
+class Renderer: public LRenderer3D {
+    &#x2F;* other fields *&#x2F;
+    void DrawModelInstance(ModelInstance* instance);
+    &#x2F;* other fields *&#x2F;
+};
+
+&#x2F;&#x2F; In Game.h
+&#x2F;&#x2F; Declaring the table and group
+Table&lt;ModelInstance&gt; m_ModelInstances;
+Group m_ModelsActive;
+
+&#x2F;&#x2F; In Game.cpp
+&#x2F;&#x2F; Draw the things
+Ecs::ApplyEvery(m_ModelsActive, [&amp;](Entity e) {
+    m_pRenderer-&gt;DrawModelInstance(m_ModelInstances.Get(e));
+});
+</code></pre>
+<p>The above usage would take everything that currently needs to be drawn and actually draw it.</p>
+<h2 id="procedural-generation">Procedural Generation</h2>
+<p>Procedural generation</p>
+<h2 id="movement">Movement</h2>
+<h2 id="time-management">Time Management</h2>
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+    </div>
+
+    
+    <div class="article-info">
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://WindowsVista42.github.io/tags/engine/">#engine</a></li>
+                    
+                    <li><a href="https://WindowsVista42.github.io/tags/rendering/">#rendering</a></li>
+                    
+                    <li><a href="https://WindowsVista42.github.io/tags/ecs/">#ecs</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+    <footer>
+      <p>
+        © WindowsVista42 2022<br>
+        Powered by <a target="_blank" href="https://getzola.org/">Zola</a>
+      </p>
+      <p>
+        
+        
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

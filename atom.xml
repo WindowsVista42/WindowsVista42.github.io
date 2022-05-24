@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>WindowsVista42</title>
+	<subtitle>All things game and game engine</subtitle>
+	<link href="https://WindowsVista42.github.io/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://WindowsVista42.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-04-25T00:00:00+00:00</updated>
+	<id>https://WindowsVista42.github.io/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Lorem Ipsum</title>
+		<published>2022-04-25T00:00:00+00:00</published>
+		<updated>2022-04-25T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/articles/post-0/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/articles/post-0/</id>
+		<content type="html">&lt;p&gt;Lorem ipsum dolor sit amet.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Quark</title>
+		<published>2022-01-20T00:00:00+00:00</published>
+		<updated>2022-01-20T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/projects/quark/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/projects/quark/</id>
+		<content type="html">&lt;p&gt;My current game and game engine project.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;what-is-it&quot;&gt;What is it&lt;&#x2F;h2&gt;
+&lt;p&gt;Quark is the name of a game engine &lt;&#x2F;p&gt;
+&lt;p&gt;I personally believe it&#x27;s quite challening to develop a game engine without a game also in the works, as it makes it hard to develop the right tools for the game engine if you have no idea
+what kinds of games are going to be made with it.&lt;&#x2F;p&gt;
+&lt;p&gt;My plans for the game are a fast paced first person shooter 
+I&#x27;m not aiming for any strict realism with the graphics, I more want something that is unique and colorful.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;overarching-design-goals&quot;&gt;Overarching Design Goals&lt;&#x2F;h2&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Lizard Wizard</title>
+		<published>2021-07-01T00:00:00+00:00</published>
+		<updated>2021-07-01T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/projects/lizard-wizard/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/projects/lizard-wizard/</id>
+		<content type="html">&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;WindowsVista42&#x2F;Lizard-Wizard-Parberry-4210&quot;&gt;Repository Link&lt;&#x2F;a&gt;&lt;br &#x2F;&gt;
+A game created by me, Ethan Flute, and Solomon Weatherby for Ian Parberry&#x27;s 4210 Intro to Game Programming I.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;what-is-it&quot;&gt;What is it&lt;&#x2F;h2&gt;
+&lt;p&gt;The premise of Lizard Wizard was that you were a lizard who happened to be a wizard, and you would have to fight through dungeons to get to the next level and eventually beat the game.
+At the end of each of these levels you would have some kind of boss that you would have to kill to proceed and the end of the game you would have a larger bigger badder boss to fight.&lt;&#x2F;p&gt;
+&lt;p&gt;In short, it was set up to be a 3D roguelike, and we had roughly 3 months to implement everything.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;rendering&quot;&gt;Rendering&lt;&#x2F;h2&gt;
+&lt;p&gt;The first problem that had to be tackled for this project was to build a prototype 3D renderer for visualization. Parberry&#x27;s game engine used
+&lt;a href=&quot;https:&#x2F;&#x2F;docs.microsoft.com&#x2F;en-us&#x2F;windows&#x2F;win32&#x2F;direct3d12&#x2F;what-is-directx-12-&quot;&gt;&lt;strong&gt;DirectX12&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; under the hood, and more specifically
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;DirectXTK12&quot;&gt;&lt;strong&gt;DirectX12TK&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;. To build a 3D renderer in his engine, I first had to extend the &lt;strong&gt;LRenderer3D&lt;&#x2F;strong&gt; class and add the necessary
+stuff to get 3D rendering up and running. I won&#x27;t go into the details of how DirectX12 works here, but for the prototype renderer I used DirectX12TK&#x27;s
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;DirectXTK12&#x2F;wiki&#x2F;PrimitiveBatch&quot;&gt;&lt;strong&gt;Primitive Batch&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;. This allowed me and my team to push some vertex info to the GPU while I got to work on
+a deferred renderer.&lt;&#x2F;p&gt;
+&lt;p&gt;The rendering architecture I decided on for was a &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Deferred_shading&quot;&gt;&lt;strong&gt;deferred renderer&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;. The benefit of this kind of approach
+is that you get all of the vertex information after all of the vertices have been processed. Because of this, you don&#x27;t have to worry about any data dependence
+and you can process all rendering effects as post process effects. In the case of Lizard Wizard, this allowed me to create some simple lighting,
+and my own take on &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Ambient_occlusion&quot;&gt;&lt;strong&gt;ambient occlusion&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;. I chose this kind of architecture because our target platform was
+high performance desktop PC&#x27;s, and the high memory bandwidth usage isn&#x27;t as much of a problem like it would be on mobile.&lt;&#x2F;p&gt;
+&lt;p&gt;&#x2F;&#x2F; PUT SOME IMPLEMENTATION DETAILS &#x2F; CODE HERE&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;entity-component-system&quot;&gt;Entity Component System&lt;&#x2F;h2&gt;
+&lt;p&gt;For this project I also built an &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Entity_component_system&quot;&gt;&lt;strong&gt;entity component system&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; as a way to learn how the technology works,
+and to help us manage all of the stuff we would have in the scene.
+The entity component system was broken down into three sections, entities, tables and groups.&lt;&#x2F;p&gt;
+&lt;p&gt;An &lt;strong&gt;Entity&lt;&#x2F;strong&gt; in our system was a globally unique identifier for a thing in the scene, typically these would consist of 
+A &lt;strong&gt;Table&lt;&#x2F;strong&gt; in our system was a list of components which, under the hood, was essentially an std::unordered_map mapping entities to components.
+A &lt;strong&gt;Group&lt;&#x2F;strong&gt; in our system was where this all came together. Groups were a way to organize given entities into groups of similar functionality.&lt;&#x2F;p&gt;
+&lt;p&gt;This was all combined with some helper functions like:&lt;&#x2F;p&gt;
+&lt;pre&gt;&lt;code&gt;template &amp;lt;typename F&amp;gt;
+Ecs::ApplyEvery(Group group, F f) {
+  &amp;#x2F;* function details *&amp;#x2F;
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;That would take a given group, a function, and apply that function to every member of the group.&lt;&#x2F;p&gt;
+&lt;p&gt;One common way all of this was used was to iterate over the currently active entities of some type (denoted in a group), and apply some kind of update function to them.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c++&quot; class=&quot;language-c++ &quot;&gt;&lt;code class=&quot;language-c++&quot; data-lang=&quot;c++&quot;&gt;&amp;#x2F;&amp;#x2F; In Model.h
+&amp;#x2F;&amp;#x2F; Instance of a model
+&amp;#x2F;&amp;#x2F; We store the index of the model we want to render as,
+&amp;#x2F;&amp;#x2F; and we store the model matrix
+struct ModelInstance {
+    u32 model;      &amp;#x2F;&amp;#x2F; model to render with
+    u32 texture;    &amp;#x2F;&amp;#x2F; texture to render with
+    Vec3 glow;      &amp;#x2F;&amp;#x2F; surface glow
+    XMMATRIX world; &amp;#x2F;&amp;#x2F; world matrix in world * view * projection
+};
+
+&amp;#x2F;&amp;#x2F; In Renderer.h
+class Renderer: public LRenderer3D {
+    &amp;#x2F;* other fields *&amp;#x2F;
+    void DrawModelInstance(ModelInstance* instance);
+    &amp;#x2F;* other fields *&amp;#x2F;
+};
+
+&amp;#x2F;&amp;#x2F; In Game.h
+&amp;#x2F;&amp;#x2F; Declaring the table and group
+Table&amp;lt;ModelInstance&amp;gt; m_ModelInstances;
+Group m_ModelsActive;
+
+&amp;#x2F;&amp;#x2F; In Game.cpp
+&amp;#x2F;&amp;#x2F; Draw the things
+Ecs::ApplyEvery(m_ModelsActive, [&amp;amp;](Entity e) {
+    m_pRenderer-&amp;gt;DrawModelInstance(m_ModelInstances.Get(e));
+});
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The above usage would take everything that currently needs to be drawn and actually draw it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;procedural-generation&quot;&gt;Procedural Generation&lt;&#x2F;h2&gt;
+&lt;p&gt;Procedural generation&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;movement&quot;&gt;Movement&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;time-management&quot;&gt;Time Management&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;lessons-learned&quot;&gt;Lessons Learned&lt;&#x2F;h2&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Three Hits</title>
+		<published>2021-05-20T00:00:00+00:00</published>
+		<updated>2021-05-20T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/projects/three-hits/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/projects/three-hits/</id>
+		<content type="html">&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;WindowsVista42&#x2F;Three-Hits&quot;&gt;Repository Link&lt;&#x2F;a&gt;&lt;br &#x2F;&gt;
+A game I made mostly from scratch over a month during the summer.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;blockquote&quot;&gt;Blockquote&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is a blockquote
+with several lines&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;tables&quot;&gt;Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;Tables aren&#x27;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;&#x2F;th&gt;&lt;th&gt;Age&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Bob&lt;&#x2F;td&gt;&lt;td&gt;27&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Alice&lt;&#x2F;td&gt;&lt;td&gt;23&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;inline-markdown-within-tables&quot;&gt;Inline Markdown within tables&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Inline   &lt;&#x2F;th&gt;&lt;th&gt;Markdown   &lt;&#x2F;th&gt;&lt;th&gt;In   &lt;&#x2F;th&gt;&lt;th&gt;Table&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;em&gt;italics&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;bold&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;del&gt;strikethrough&lt;&#x2F;del&gt;   &lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;code&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;code-blocks&quot;&gt;Code Blocks&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;code-block-with-backticks&quot;&gt;Code block with backticks&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;html&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;&amp;#x2F;title&amp;gt;
+&amp;lt;&amp;#x2F;head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;p&amp;gt;Test&amp;lt;&amp;#x2F;p&amp;gt;
+&amp;lt;&amp;#x2F;body&amp;gt;
+&amp;lt;&amp;#x2F;html&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;list-types&quot;&gt;List Types&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;ordered-list&quot;&gt;Ordered List&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;First item&lt;&#x2F;li&gt;
+&lt;li&gt;Second item&lt;&#x2F;li&gt;
+&lt;li&gt;Third item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;unordered-list&quot;&gt;Unordered List&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List item&lt;&#x2F;li&gt;
+&lt;li&gt;Another item&lt;&#x2F;li&gt;
+&lt;li&gt;And another item&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;nested-list&quot;&gt;Nested list&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Item
+&lt;ol&gt;
+&lt;li&gt;First Sub-item&lt;&#x2F;li&gt;
+&lt;li&gt;Second Sub-item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;other-elements-abbr-sub-sup-kbd-mark&quot;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;abbr title=&quot;Graphics Interchange Format&quot;&gt;GIF&lt;&#x2F;abbr&gt; is a bitmap image format.&lt;&#x2F;p&gt;
+&lt;p&gt;H&lt;sub&gt;2&lt;&#x2F;sub&gt;O&lt;&#x2F;p&gt;
+&lt;p&gt;X&lt;sup&gt;n&lt;&#x2F;sup&gt; + Y&lt;sup&gt;n&lt;&#x2F;sup&gt; = Z&lt;sup&gt;n&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Press &lt;kbd&gt;&lt;kbd&gt;CTRL&lt;&#x2F;kbd&gt;+&lt;kbd&gt;ALT&lt;&#x2F;kbd&gt;+&lt;kbd&gt;Delete&lt;&#x2F;kbd&gt;&lt;&#x2F;kbd&gt; to end the session.&lt;&#x2F;p&gt;
+&lt;p&gt;Most &lt;mark&gt;salamanders&lt;&#x2F;mark&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Untitled Space Game</title>
+		<published>2021-04-01T00:00:00+00:00</published>
+		<updated>2021-04-01T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/projects/untitled-space-game/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/projects/untitled-space-game/</id>
+		<content type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu feugiat sapien. Aenean ligula nunc, laoreet id sem in, interdum bibendum felis. Donec vel dui neque. Praesent ac sem ut justo volutpat rutrum a imperdiet tellus. Nam lobortis massa non hendrerit hendrerit. Vivamus porttitor dignissim turpis, eget aliquam urna tincidunt non. Aliquam et fringilla turpis. Nullam eros est, eleifend in ornare sed, hendrerit eget est. Aliquam tellus felis, suscipit vitae ex vel, fringilla tempus massa. Nulla facilisi. Pellentesque lobortis consequat lectus. Maecenas ac libero elit.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;blockquote&quot;&gt;Blockquote&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is a blockquote
+with several lines&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;tables&quot;&gt;Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;Tables aren&#x27;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;&#x2F;th&gt;&lt;th&gt;Age&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Bob&lt;&#x2F;td&gt;&lt;td&gt;27&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Alice&lt;&#x2F;td&gt;&lt;td&gt;23&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;inline-markdown-within-tables&quot;&gt;Inline Markdown within tables&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Inline   &lt;&#x2F;th&gt;&lt;th&gt;Markdown   &lt;&#x2F;th&gt;&lt;th&gt;In   &lt;&#x2F;th&gt;&lt;th&gt;Table&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;em&gt;italics&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;bold&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;del&gt;strikethrough&lt;&#x2F;del&gt;   &lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;code&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;code-blocks&quot;&gt;Code Blocks&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;code-block-with-backticks&quot;&gt;Code block with backticks&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;html&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;&amp;#x2F;title&amp;gt;
+&amp;lt;&amp;#x2F;head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;p&amp;gt;Test&amp;lt;&amp;#x2F;p&amp;gt;
+&amp;lt;&amp;#x2F;body&amp;gt;
+&amp;lt;&amp;#x2F;html&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;list-types&quot;&gt;List Types&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;ordered-list&quot;&gt;Ordered List&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;First item&lt;&#x2F;li&gt;
+&lt;li&gt;Second item&lt;&#x2F;li&gt;
+&lt;li&gt;Third item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;unordered-list&quot;&gt;Unordered List&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List item&lt;&#x2F;li&gt;
+&lt;li&gt;Another item&lt;&#x2F;li&gt;
+&lt;li&gt;And another item&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;nested-list&quot;&gt;Nested list&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Item
+&lt;ol&gt;
+&lt;li&gt;First Sub-item&lt;&#x2F;li&gt;
+&lt;li&gt;Second Sub-item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;other-elements-abbr-sub-sup-kbd-mark&quot;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;abbr title=&quot;Graphics Interchange Format&quot;&gt;GIF&lt;&#x2F;abbr&gt; is a bitmap image format.&lt;&#x2F;p&gt;
+&lt;p&gt;H&lt;sub&gt;2&lt;&#x2F;sub&gt;O&lt;&#x2F;p&gt;
+&lt;p&gt;X&lt;sup&gt;n&lt;&#x2F;sup&gt; + Y&lt;sup&gt;n&lt;&#x2F;sup&gt; = Z&lt;sup&gt;n&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Press &lt;kbd&gt;&lt;kbd&gt;CTRL&lt;&#x2F;kbd&gt;+&lt;kbd&gt;ALT&lt;&#x2F;kbd&gt;+&lt;kbd&gt;Delete&lt;&#x2F;kbd&gt;&lt;&#x2F;kbd&gt; to end the session.&lt;&#x2F;p&gt;
+&lt;p&gt;Most &lt;mark&gt;salamanders&lt;&#x2F;mark&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Too Many Dimensions</title>
+		<published>2020-11-01T00:00:00+00:00</published>
+		<updated>2020-11-01T00:00:00+00:00</updated>
+		<link href="https://WindowsVista42.github.io/projects/too-many-dimensions/" type="text/html"/>
+		<id>https://WindowsVista42.github.io/projects/too-many-dimensions/</id>
+		<content type="html">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu feugiat sapien. Aenean ligula nunc, laoreet id sem in, interdum bibendum felis. Donec vel dui neque. Praesent ac sem ut justo volutpat rutrum a imperdiet tellus. Nam lobortis massa non hendrerit hendrerit. Vivamus porttitor dignissim turpis, eget aliquam urna tincidunt non. Aliquam et fringilla turpis. Nullam eros est, eleifend in ornare sed, hendrerit eget est. Aliquam tellus felis, suscipit vitae ex vel, fringilla tempus massa. Nulla facilisi. Pellentesque lobortis consequat lectus. Maecenas ac libero elit.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;blockquote&quot;&gt;Blockquote&lt;&#x2F;h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is a blockquote
+with several lines&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;tables&quot;&gt;Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;Tables aren&#x27;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Name&lt;&#x2F;th&gt;&lt;th&gt;Age&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Bob&lt;&#x2F;td&gt;&lt;td&gt;27&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Alice&lt;&#x2F;td&gt;&lt;td&gt;23&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;inline-markdown-within-tables&quot;&gt;Inline Markdown within tables&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Inline   &lt;&#x2F;th&gt;&lt;th&gt;Markdown   &lt;&#x2F;th&gt;&lt;th&gt;In   &lt;&#x2F;th&gt;&lt;th&gt;Table&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;em&gt;italics&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;bold&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;del&gt;strikethrough&lt;&#x2F;del&gt;   &lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;code&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;code-blocks&quot;&gt;Code Blocks&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;code-block-with-backticks&quot;&gt;Code block with backticks&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;html&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;&amp;#x2F;title&amp;gt;
+&amp;lt;&amp;#x2F;head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;p&amp;gt;Test&amp;lt;&amp;#x2F;p&amp;gt;
+&amp;lt;&amp;#x2F;body&amp;gt;
+&amp;lt;&amp;#x2F;html&amp;gt;
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;list-types&quot;&gt;List Types&lt;&#x2F;h2&gt;
+&lt;h4 id=&quot;ordered-list&quot;&gt;Ordered List&lt;&#x2F;h4&gt;
+&lt;ol&gt;
+&lt;li&gt;First item&lt;&#x2F;li&gt;
+&lt;li&gt;Second item&lt;&#x2F;li&gt;
+&lt;li&gt;Third item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;unordered-list&quot;&gt;Unordered List&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List item&lt;&#x2F;li&gt;
+&lt;li&gt;Another item&lt;&#x2F;li&gt;
+&lt;li&gt;And another item&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;nested-list&quot;&gt;Nested list&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Item
+&lt;ol&gt;
+&lt;li&gt;First Sub-item&lt;&#x2F;li&gt;
+&lt;li&gt;Second Sub-item&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;other-elements-abbr-sub-sup-kbd-mark&quot;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;abbr title=&quot;Graphics Interchange Format&quot;&gt;GIF&lt;&#x2F;abbr&gt; is a bitmap image format.&lt;&#x2F;p&gt;
+&lt;p&gt;H&lt;sub&gt;2&lt;&#x2F;sub&gt;O&lt;&#x2F;p&gt;
+&lt;p&gt;X&lt;sup&gt;n&lt;&#x2F;sup&gt; + Y&lt;sup&gt;n&lt;&#x2F;sup&gt; = Z&lt;sup&gt;n&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Press &lt;kbd&gt;&lt;kbd&gt;CTRL&lt;&#x2F;kbd&gt;+&lt;kbd&gt;ALT&lt;&#x2F;kbd&gt;+&lt;kbd&gt;Delete&lt;&#x2F;kbd&gt;&lt;&#x2F;kbd&gt; to end the session.&lt;&#x2F;p&gt;
+&lt;p&gt;Most &lt;mark&gt;salamanders&lt;&#x2F;mark&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>
