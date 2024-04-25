@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>To-Do List</title>
@@ -37,7 +38,7 @@
             margin-bottom: 10px;
         }
 
-       .checkbox {
+        .checkbox {
             margin-right: 10px;
         }
 
@@ -61,31 +62,93 @@
             background-color: #0056b3;
         }
 
-       .completed {
+        .completed {
             text-decoration: line-through;
             color: #888;
         }
 
-       .all-completed {
+        .all-completed {
             font-weight: bold;
             color: #44c767;
         }
     </style>
 </head>
+
 <body>
 
-<div id="container">
-    <h1>Simple To-Do List</h1>
-    <p>This is a simple to-do list application where you can add, remove, and keep track of your daily tasks. When all tasks are completed, the app will notify you.</p>
-    <ul id="todo-list"></ul>
-    <div>
-        <input type="text" id="new-item-input" placeholder="Add a new item...">
-        <button id="new-item-button">Add</button>
+    <div id="container">
+        <h1>Simple To-Do List</h1>
+        <p>This is a simple to-do list application where you can add, remove, and keep track of your daily tasks. When
+            all tasks are completed, the app will notify you.</p>
+        <ul id="todo-list"></ul>
+        <div>
+            <input type="text" id="new-item-input" placeholder="Add a new item...">
+            <button id="new-item-button">Add</button>
+        </div>
+        <script>
+            const todoList = document.getElementById('todo-list');
+            const newItemInput = document.getElementById('new-item-input');
+            const newItemButton = document.getElementById('new-item-button');
+
+            let items = [
+                { title: "Get Groceries", completed: false },
+                { title: "Clean Clothes", completed: false },
+                { title: "Wash Dishes", completed: false }
+            ];
+
+            function renderItems() {
+                todoList.innerHTML = '';
+                let allCompleted = true;
+                items.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.classList.add('checkbox');
+                    checkbox.checked = item.completed;
+                    checkbox.onchange = () => {
+                        item.completed = checkbox.checked;
+                        renderItems();
+                        checkAllCompleted();
+                    };
+                    li.appendChild(checkbox);
+
+                    const span = document.createElement('span');
+                    span.classList.add(item.completed ? 'completed' : '');
+                    span.textContent = item.title;
+                    li.appendChild(span);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = () => {
+                        items.splice(index, 1);
+                        renderItems();
+                        checkAllCompleted();
+                    };
+                    li.appendChild(deleteButton);
+
+                    todoList.appendChild(li);
+                });
+                checkAllCompleted();
+            }
+
+            function checkAllCompleted() {
+                const allCompleted = items.every(item => item.completed);
+                if (allCompleted) {
+                    alert('Congratulations! You have completed all tasks!');
+                }
+            }
+
+            newItemButton.onclick = () => {
+                const newItem = { title: newItemInput.value, completed: false };
+                items.push(newItem);
+                newItemInput.value = '';
+                renderItems();
+            };
+
+            renderItems();
+        </script>
     </div>
-    <script>
-        // script code here
-    </script>
-</div>
 
 </body>
+
 </html>
