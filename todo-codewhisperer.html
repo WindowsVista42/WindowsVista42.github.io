@@ -1,0 +1,122 @@
+<!--
+    For the following task you will be creating a single-file webpage with embedded JavaScript and CSS. For the website please create a simple todo list website with elements: "Get Groceries", "Clean Clothes", and "Wash Dishes". Each todo list element should have a checkbox on the left. The website needs to let users add and remove todo elements. When all checkboxes are checked, the app should signal to the user that everything has been completed. The website should have a visually attractive theming similar to modern apple websites. The website should include a description of the purpose of the website.
+-->
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #555;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        #newTask {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <title>Todo List</title>
+    <body>
+        <div id="app">
+            <h1>Todo List</h1>
+            <p>Keep track of your tasks</p>
+            <ul id="todoList">
+                <li>
+                    <input type="checkbox">
+                    Get Groceries
+                </li>
+                <li>
+                    <input type="checkbox">
+                    Clean Clothes
+                </li>
+                <li>
+                    <input type="checkbox">
+                    Wash Dishes
+                </li>
+            </ul>
+            <input type="text" id="newTask" placeholder="Add a new task">
+            <button id="addTask">Add Task</button>
+        </div>
+        <script>
+            const todoList = document.getElementById('todoList');
+            const newTask = document.getElementById('newTask');
+            const addTask = document.getElementById('addTask');
+
+            addTask.addEventListener('click', () => {
+                const task = newTask.value;
+                if (task) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <input type="checkbox">
+                        ${task}
+                    `;
+                    todoList.appendChild(li);
+                    newTask.value = '';
+                }
+            });
+
+            todoList.addEventListener('change', () => {
+                const checkboxes = todoList.querySelectorAll('input[type="checkbox"]');
+                const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                if (allChecked) {
+                    alert('All tasks completed!');
+                }
+            });
+        </script>
+    </body>
+</head>

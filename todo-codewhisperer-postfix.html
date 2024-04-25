@@ -1,0 +1,136 @@
+<!--
+    For the following task you will be creating a single-file webpage with embedded JavaScript and CSS. For the website please create a simple todo list website with elements: "Get Groceries", "Clean Clothes", and "Wash Dishes". Each todo list element should have a checkbox on the left. The website needs to let users add and remove todo elements. When all checkboxes are checked, the app should signal to the user that everything has been completed. The website should have a visually attractive theming similar to modern apple websites. The website should include a description of the purpose of the website.
+    Now act as an accessibility expert. Please locate and identify accessibility problems with the website you generated. Now, apply fixes to the website in accordance with accessibility guidelines. Please generate and display the entire new file. DO NOT SHORTEN FOR BREVITY.
+-->
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #555;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        #newTask {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <title>Todo List</title>
+    <body>
+        <div id="app">
+            <h1>📝 To-Do List</h1>
+            <p>Keep track of your tasks</p>
+            <ul id="taskList">
+                <li>
+                    <input type="checkbox" id="task1" class="taskCheckbox">
+                    <label for="task1">Get Groceries</label>
+                    <button class="removeTask">🗑️</button>
+                </li>
+                <li>
+                    <input type="checkbox" id="task2" class="taskCheckbox">
+                    <label for="task2">Clean Clothes</label>
+                    <button class="removeTask">🗑️</button>
+                </li>
+                <li>
+                    <input type="checkbox" id="task3" class="taskCheckbox">
+                    <label for="task3">Wash Dishes</label>
+                    <button class="removeTask">🗑️</button>
+                </li>
+            </ul>
+            <input type="text" id="newTask" placeholder="Add a new task">
+            <button id="addTask">Add Task</button>
+            <p id="completionMessage"></p>
+        </div>
+        <script>
+            const taskList = document.getElementById('taskList');
+            const newTask = document.getElementById('newTask');
+            const addTask = document.getElementById('addTask');
+            const completionMessage = document.getElementById('completionMessage');
+
+            addTask.addEventListener('click', () => {
+                if (newTask.value) {
+                    const newTaskElement = document.createElement('li');
+                    newTaskElement.innerHTML = `
+                        <input type="checkbox" class="taskCheckbox">
+                        <label>${newTask.value}</label>
+                        <button class="removeTask">🗑️</button>
+                    `;
+                    taskList.appendChild(newTaskElement);
+                    newTask.value = '';
+                    updateCompletionMessage();
+                }
+            });
+
+            taskList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('removeTask')) {
+                    event.target.parentElement.remove();
+                    updateCompletionMessage();
+                }
+            });
+
+            taskList.addEventListener('change', (event) => {
+                if (event.target.classList.contains('taskCheckbox')) {
+                    updateCompletionMessage();
+                }
+            });
+
+            function updateCompletionMessage() {
+                const taskCheckboxes = document.querySelectorAll('.taskCheckbox');
+                const allChecked = Array.from(taskCheckboxes).every((checkbox) => checkbox.checked);
+                completionMessage.textContent = allChecked ? 'All tasks completed!' : '';
+            }
+        </script>
+    </body>
+</head>
