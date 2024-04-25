@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            text-align: center;
+            margin: 40px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 20px;
+        }
+        #new-task {
+            padding: 10px;
+            margin: 20px 0;
+            width: 60%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #add-task {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        #info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Todo List</h1>
+    <p id="info">Keep track of your daily tasks effortlessly. Tick off the tasks once completed.</p>
+    <form id="task-form">
+        <label for="new-task" class="visually-hidden">New Task:</label>
+        <input type="text" id="new-task" placeholder="Add new task...">
+        <button type="submit" id="add-task">Add Task</button>
+    </form>
+    <ul id="tasks">
+        <li><input type="checkbox" id="task-1" name="task-1"><label for="task-1">Get Groceries</label></li>
+        <li><input type="checkbox" id="task-2" name="task-2"><label for="task-2">Clean Clothes</label></li>
+        <li><input type="checkbox" id="task-3" name="task-3"><label for="task-3">Wash Dishes</label></li>
+    </ul>
+
+    <script>
+        const form = document.getElementById('task-form');
+        const tasks = document.getElementById('tasks');
+        const newTaskInput = document.getElementById('new-task');
+        const addTaskButton = document.getElementById('add-task');
+        let taskId = 3;
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const taskText = newTaskInput.value;
+            if (taskText) {
+                taskId++;
+                const li = document.createElement('li');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'task-' + taskId;
+                checkbox.name = 'task-' + taskId;
+                const label = document.createElement('label');
+                label.htmlFor = 'task-' + taskId;
+                label.textContent = taskText;
+                li.appendChild(checkbox);
+                li.appendChild(label);
+                tasks.appendChild(li);
+                newTaskInput.value = ''; // Clear input field
+            }
+        });
+
+        tasks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'LABEL') {
+                e.target.parentElement.remove(); // Allows for more accessible task removal
+            }
+        });
+
+        function checkTaskCompletion() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+            if (checkboxes.length === 0) {
+                alert('All tasks completed! Well done!');
+            }
+        }
+
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', checkTaskCompletion);
+        });
+    </script>
+</body>
+</html>
