@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple To-Do List</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    #todo-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #todo-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    #todo-list input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    #completion-message {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #new-task, #add-task {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+    }
+
+    #add-task {
+      cursor: pointer;
+      background-color: #333;
+      color: #fff;
+    }
+
+    #add-task:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simple To-Do List</h1>
+    <p>Stay organized and manage your tasks with this simple to-do list app.</p>
+    <ul id="todo-list">
+      <li>
+        <input type="checkbox" id="task1">
+        <label for="task1">Get Groceries</label>
+      </li>
+      <li>
+        <input type="checkbox" id="task2">
+        <label for="task2">Clean Clothes</label>
+      </li>
+      <li>
+        <input type="checkbox" id="task3">
+        <label for="task3">Wash Dishes</label>
+      </li>
+    </ul>
+    <input type="text" id="new-task" placeholder="Add a new task...">
+    <button id="add-task">Add Task</button>
+    <p id="completion-message"></p>
+  </div>
+  <script>
+    const todoList = document.getElementById('todo-list');
+    const newTaskInput = document.getElementById('new-task');
+    const addTaskButton = document.getElementById('add-task');
+    const completionMessage = document.getElementById('completion-message');
+
+    function updateCompletionMessage() {
+      const allChecked = [...todoList.querySelectorAll('input[type="checkbox"]')].every(checkbox => checkbox.checked);
+      completionMessage.textContent = allChecked ? 'Congratulations! You completed all tasks.' : '';
+    }
+
+    todoList.addEventListener('change', updateCompletionMessage);
+
+    addTaskButton.addEventListener('click', function() {
+      const newTaskText = newTaskInput.value.trim();
+      if (newTaskText) {
+        const newListItem = document.createElement('li');
+        const newCheckbox = document.createElement('input');
+        newCheckbox.type = 'checkbox';
+        newCheckbox.id = `task-${todoList.children.length + 1}`;
+        const newLabel = document.createElement('label');
+        newLabel.for = newCheckbox.id;
+        newLabel.textContent = newTaskText;
+        newListItem.appendChild(newCheckbox);
+        newListItem.appendChild(newLabel);
+        todoList.appendChild(newListItem);
+        newTaskInput.value = '';
+        updateCompletionMessage();
+      }
+    });
+  </script>
+</body>
+</html>

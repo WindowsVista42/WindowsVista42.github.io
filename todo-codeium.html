@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        /* CSS styles for the todo list */
+        /* Add your styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #completion-message {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Modern Todo List</h1>
+        <p>A simple and stylish todo list to keep you organized.</p>
+    </header>
+    <main>
+        <ul id="todo-list">
+            <!-- Todo list elements will be added here dynamically -->
+        </ul>
+        <button id="add-todo">Add Todo</button>
+        <button id="remove-completed">Remove Completed</button>
+        <p id="completion-message"></p>
+    </main>
+    <script>
+        const todoList = document.getElementById("todo-list");
+        const addTodoButton = document.getElementById("add-todo");
+        const removeCompletedButton = document.getElementById("remove-completed");
+        const completionMessage = document.getElementById("completion-message");
+
+        addTodoButton.addEventListener("click", () => {
+            // Implement adding a new todo item
+        });
+
+        removeCompletedButton.addEventListener("click", () => {
+            // Implement removing completed todo items
+        });
+
+        todoList.addEventListener("change", () => {
+            // Implement checking completion status
+        });
+    </script>
+</body>
+</html>
