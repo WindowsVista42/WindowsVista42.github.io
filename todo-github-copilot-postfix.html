@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Accessible Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #app {
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #555;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        #newTask {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Todo List</h1>
+        <p>This is a simple todo list app. Add your tasks, check them off when done, and remove them if you want.</p>
+        <ul id="todoList">
+            <li><input type="checkbox" id="task1"><label for="task1">Get Groceries</label></li>
+            <li><input type="checkbox" id="task2"><label for="task2">Clean Clothes</label></li>
+            <li><input type="checkbox" id="task3"><label for="task3">Wash Dishes</label></li>
+        </ul>
+        <label for="newTask">New task:</label>
+        <input type="text" id="newTask" placeholder="New task...">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+    <script>
+        var taskId = 4;
+        function addTask() {
+            var ul = document.getElementById("todoList");
+            var task = document.getElementById("newTask");
+            var li = document.createElement("li");
+            li.innerHTML = '<input type="checkbox" id="task' + taskId + '"><label for="task' + taskId + '">' + task.value + '</label>';
+            ul.appendChild(li);
+            task.value = "";
+            taskId++;
+        }
+        document.getElementById("todoList").addEventListener("change", function(e) {
+            var checkboxes = document.querySelectorAll("#todoList input[type='checkbox']");
+            var allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            if (allChecked) {
+                alert("All tasks completed!");
+            }
+        });
+    </script>
+</body>
+</html>
