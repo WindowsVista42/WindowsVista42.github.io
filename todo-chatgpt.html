@@ -1,126 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Todo List</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    
-    .container {
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        width: 100%;
-    }
-    
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-    
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    
-    li {
-        margin-bottom: 10px;
-    }
-    
-    label {
-        display: inline-block;
-        cursor: pointer;
-    }
-    
-    input[type="checkbox"] {
-        display: none;
-    }
-    
-    .checkbox-custom {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        position: relative;
-        vertical-align: middle;
-    }
-    
-    .checkbox-custom:before {
-        content: "";
-        display: block;
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        background-color: #fff;
-        border-radius: 3px;
-        transition: all 0.3s;
-    }
-    
-    input[type="checkbox"]:checked + .checkbox-custom:before {
-        background-color: #007bff;
-    }
-    
-    .complete {
-        text-decoration: line-through;
-        color: #888;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .todo-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        #addTodo {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <div id="todoList">
+            <div class="todo-item"><input type="checkbox" onclick="toggleCompletion(0)"><span id="todo0">Get Groceries</span></div>
+            <div class="todo-item"><input type="checkbox" onclick="toggleCompletion(1)"><span id="todo1">Clean Clothes</span></div>
+            <div class="todo-item"><input type="checkbox" onclick="toggleCompletion(2)"><span id="todo2">Wash Dishes</span></div>
+        </div>
+        <input type="text" id="addTodo" placeholder="Add new todo">
+    </div>
 
-<div class="container">
-    <h1>Todo List</h1>
-    <p>This simple todo list helps you keep track of your tasks.</p>
-    <ul id="todo-list">
-        <li>
-            <input type="checkbox" id="groceries">
-            <label for="groceries" class="checkbox-custom"></label>
-            Get Groceries
-        </li>
-        <li>
-            <input type="checkbox" id="clean-clothes">
-            <label for="clean-clothes" class="checkbox-custom"></label>
-            Clean Clothes
-        </li>
-        <li>
-            <input type="checkbox" id="wash-dishes">
-            <label for="wash-dishes" class="checkbox-custom"></label>
-            Wash Dishes
-        </li>
-    </ul>
-    <p id="completion-message" style="display: none; text-align: center; color: #007bff;">Congratulations! You've completed all tasks.</p>
-</div>
-
-<script>
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const completionMessage = document.getElementById('completion-message');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const allChecked = [...checkboxes].every(cb => cb.checked);
-            if (allChecked) {
-                completionMessage.style.display = 'block';
+    <script>
+        function toggleCompletion(index) {
+            var todo = document.getElementById('todo' + index);
+            var checkbox = document.querySelector('.todo-item:nth-child(' + (index + 1) + ') input[type="checkbox"]');
+            if (checkbox.checked) {
+                todo.classList.add('completed');
             } else {
-                completionMessage.style.display = 'none';
+                todo.classList.remove('completed');
+            }
+            checkAllCompleted();
+        }
+
+        function checkAllCompleted() {
+            var allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            var allCompleted = true;
+            allCheckboxes.forEach(function(checkbox) {
+                if (!checkbox.checked) {
+                    allCompleted = false;
+                }
+            });
+            if (allCompleted) {
+                alert("Congratulations! You've completed all tasks.");
+            }
+        }
+
+        document.getElementById('addTodo').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                var input = document.getElementById('addTodo');
+                var todoText = input.value.trim();
+                if (todoText !== '') {
+                    var todoList = document.getElementById('todoList');
+                    var newIndex = todoList.children.length;
+                    var newTodoItem = document.createElement('div');
+                    newTodoItem.classList.add('todo-item');
+                    newTodoItem.innerHTML = '<input type="checkbox" onclick="toggleCompletion(' + newIndex + ')"><span id="todo' + newIndex + '">' + todoText + '</span>';
+                    todoList.appendChild(newTodoItem);
+                    input.value = '';
+                }
             }
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
