@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        /* Add your custom CSS here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        .task-text {
+            flex-grow: 1;
+        }
+        .add-task {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .add-input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 To-Do List</h1>
+        <ul class="task-list">
+            <li class="task-item">
+                <input type="checkbox" class="task-checkbox">
+                <span class="task-text">Get Groceries</span>
+                <button class="remove-task">🗑️</button>
+            </li>
+            <li class="task-item">
+                <input type="checkbox" class="task-checkbox">
+                <span class="task-text">Clean Clothes</span>
+                <button class="remove-task">🗑️</button>
+            </li>
+            <li class="task-item">
+                <input type="checkbox" class="task-checkbox">
+                <span class="task-text">Wash Dishes</span>
+                <button class="remove-task">🗑️</button>
+            </li>
+        </ul>
+        <div class="add-task">
+            <input type="text" class="add-input" placeholder="Add a new task...">
+            <button class="add-button">+</button>
+        </div>
+        <p id="completion-message"></p>
+    </div>
+
+    <script>
+        // Add your JavaScript logic here
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        const removeButtons = document.querySelectorAll('.remove-task');
+        const addInput = document.querySelector('.add-input');
+        const addButton = document.querySelector('.add-button');
+        const completionMessage = document.getElementById('completion-message');
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', checkCompletion);
+        });
+
+        removeButtons.forEach((button) => {
+            button.addEventListener('click', removeTask);
+        });
+
+        addButton.addEventListener('click', addTask);
+
+        function checkCompletion() {
+            const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
+            if (allChecked) {
+                completionMessage.textContent = 'Congratulations! You completed everything!';
+            } else {
+                completionMessage.textContent = '';
+            }
+        }
+
+        function removeTask(event) {
+            const taskItem = event.target.closest('.task-item');
+            taskItem.remove();
+            checkCompletion();
+        }
+
+        function addTask() {
+            const taskText = addInput.value.trim();
+            if (taskText) {
+                const newTaskItem = document.createElement('li');
+                newTaskItem.classList.add('task-item');
+                newTaskItem.innerHTML = `
+                    <input type="checkbox" class="task-checkbox">
+                    <span class="task-text">${taskText}</span>
+                    <button class="remove-task">🗑️</button>
+                `;
+                document.querySelector('.task-list').appendChild(newTaskItem);
+                addInput.value = '';
+                checkCompletion();
+            }
+        }
+    </script>
+</body>
+</html>
