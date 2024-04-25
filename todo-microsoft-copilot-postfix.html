@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .task-text {
+            flex-grow: 1;
+        }
+        .add-task {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .add-input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        /* Improved contrast */
+        .good {
+            background-color: #5a80a9;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 To-Do List</h1>
+        <ul>
+            <li>
+                <input type="checkbox" id="groceries">
+                <label for="groceries" class="task-text good">Get Groceries</label>
+            </li>
+            <li>
+                <input type="checkbox" id="clothes">
+                <label for="clothes" class="task-text good">Clean Clothes</label>
+            </li>
+            <li>
+                <input type="checkbox" id="dishes">
+                <label for="dishes" class="task-text good">Wash Dishes</label>
+            </li>
+        </ul>
+        <div class="add-task">
+            <input type="text" class="add-input" placeholder="Add a new task...">
+            <button class="add-button">+</button>
+        </div>
+        <p id="completion-message"></p>
+    </div>
+
+    <script>
+        // JavaScript logic (same as before)
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #999999;
+        }
+
+        .complete-message {
+            text-align: center;
+            font-style: italic;
+            color: #999999;
+            display: none;
+        }
+
+        .remove-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #007bff;
+            padding: 0;
+            margin-left: auto;
+        }
+
+        .remove-btn:focus {
+            outline: 2px solid #007bff;
+        }
+
+        .remove-btn::-moz-focus-inner {
+            border: 0;
+        }
+
+        #new-todo {
+            padding: 8px;
+            width: 70%;
+            margin-right: 10px;
+        }
+
+        #add-button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #add-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #add-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <ul id="todo-list" aria-live="polite">
+            <li>
+                <input type="checkbox" id="todo1">
+                <label for="todo1">Get Groceries</label>
+                <button class="remove-btn">Remove</button>
+            </li>
+            <li>
+                <input type="checkbox" id="todo2">
+                <label for="todo2">Clean Clothes</label>
+                <button class="remove-btn">Remove</button>
+            </li>
+            <li>
+                <input type="checkbox" id="todo3">
+                <label for="todo3">Wash Dishes</label>
+                <button class="remove-btn">Remove</button>
+            </li>
+        </ul>
+        <div class="complete-message" role="alert" aria-atomic="true">Congratulations! You've completed all tasks!</div>
+        <form id="add-form">
+            <input type="text" id="new-todo" aria-label="Add new todo" placeholder="Add new todo">
+            <button type="submit" id="add-button">Add</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const todoList = document.getElementById('todo-list');
+            const completeMessage = document.querySelector('.complete-message');
+            const addForm = document.getElementById('add-form');
+            const newTodoInput = document.getElementById('new-todo');
+
+            // Function to update complete message visibility
+            function updateCompleteMessage() {
+                const allChecked = [...todoList.querySelectorAll('input[type="checkbox"]')].every(checkbox => checkbox.checked);
+                completeMessage.style.display = allChecked ? 'block' : 'none';
+            }
+
+            // Function to handle adding new todo
+            function addTodo(todoText) {
+                const li = document.createElement('li');
+                const checkboxId = 'todo' + (todoList.childElementCount + 1);
+                li.innerHTML = `
+                    <input type="checkbox" id="${checkboxId}">
+                    <label for="${checkboxId}">${todoText}</label>
+                    <button class="remove-btn">Remove</button>
+                `;
+                todoList.appendChild(li);
+                updateCompleteMessage();
+            }
+
+            // Event listener for form submission
+            addForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const todoText = newTodoInput.value.trim();
+                if (todoText !== '') {
+                    addTodo(todoText);
+                    newTodoInput.value = '';
+                }
+            });
+
+            // Event delegation for remove buttons
+            todoList.addEventListener('click', function(event) {
+                if (event.target.classList.contains('remove-btn')) {
+                    event.target.parentNode.remove();
+                    updateCompleteMessage();
+                }
+            });
+
+            // Event delegation for checkboxes
+            todoList.addEventListener('change', function(event) {
+                if (event.target.type === 'checkbox') {
+                    event.target.nextElementSibling.classList.toggle('completed', event.target.checked);
+                    updateCompleteMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Todo List Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    
+    .todo-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    .todo-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .checkbox {
+      margin-right: 10px;
+    }
+    
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+    
+    .add-todo {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .add-todo input {
+      flex-grow: 1;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .add-todo button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .completed-message {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Todo List</h1>
+  </header>
+  
+  <main>
+    <section>
+      <h2>Welcome to the Todo List website!</h2>
+      <p>This website is designed to help you keep track of your tasks and stay organized. Simply add your tasks to the list below and check them off as you complete them.</p>
+    </section>
+    
+    <section>
+      <h2>Tasks</h2>
+      <ul class="todo-list">
+        <li class="todo-item">
+          <input type="checkbox" class="checkbox" id="task1">
+          <label for="task1">Get Groceries</label>
+        </li>
+        <li class="todo-item">
+          <input type="checkbox" class="checkbox" id="task2">
+          <label for="task2">Clean Clothes</label>
+        </li>
+        <li class="todo-item">
+          <input type="checkbox" class="checkbox" id="task3">
+          <label for="task3">Wash Dishes</label>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h2>Add a New Task</h2>
+      <div class="add-todo">
+        <input type="text" id="newTodoInput" placeholder="Add a new task">
+        <button id="addTodoButton">Add</button>
+      </div>
+    </section>
+    
+    <section>
+      <p class="completed-message" id="completedMessage"></p>
+    </section>
+  </main>
+  
+  <script>
+    const todoList = document.querySelector(".todo-list");
+    const addTodoButton = document.querySelector("#addTodoButton");
+    const newTodoInput = document.querySelector("#newTodoInput");
+    const completedMessage = document.querySelector("#completedMessage");
+    
+    addTodoButton.addEventListener("click", () => {
+      const newTodoText = newTodoInput.value;
+      if (newTodoText.trim() !== "") {
+        const newTodoItem = document.createElement("li");
+        newTodoItem.classList.add("todo-item");
+        newTodoItem.innerHTML = `
+          <input type="checkbox" class="checkbox">
+          <span>${newTodoText}</span>
+        `;
+        todoList.appendChild(newTodoItem);
+        newTodoInput.value = "";
+      }
+    });
+    
+    todoList.addEventListener("click", (event) => {
+      const checkbox = event.target;
+      if (checkbox.classList.contains("checkbox")) {
+        const todoItem = checkbox.parentNode;
+        todoItem.classList.toggle("completed");
+        
+        const allTodoItems = todoList.querySelectorAll(".todo-item");
+        const completedTodoItems = todoList.querySelectorAll(".completed");
+        if (allTodoItems.length === completedTodoItems.length) {
+          completedMessage.textContent = "Congratulations! You have completed all tasks.";
+        } else {
+          completedMessage.textContent = "";
+        }
+      }
+    });
+  </script>
+</body>
+</html>

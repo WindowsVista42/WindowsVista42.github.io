@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        #todoList {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="todoList">
+        <h1>Todo List</h1>
+        <p>This website helps you keep track of your tasks!</p>
+        <ul id="tasks" role="list">
+            <li>
+                <input type="checkbox" id="task1" onclick="checkCompletion()">
+                <label for="task1">Get Groceries</label>
+            </li>
+            <li>
+                <input type="checkbox" id="task2" onclick="checkCompletion()">
+                <label for="task2">Clean Clothes</label>
+            </li>
+            <li>
+                <input type="checkbox" id="task3" onclick="checkCompletion()">
+                <label for="task3">Wash Dishes</label>
+            </li>
+        </ul>
+        <input type="text" id="newTask" aria-label="Add a new task" placeholder="Add a new task">
+        <button onclick="addTask()">Add</button>
+    </div>
+    <script>
+        function checkCompletion() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            if (allChecked) {
+                alert('You have completed all tasks!');
+            }
+        }
+
+        function addTask() {
+            const newTask = document.getElementById('newTask').value;
+            if (newTask.trim() !== '') {
+                const ul = document.getElementById('tasks');
+                const li = document.createElement('li');
+                li.innerHTML = `<input type="checkbox" onclick="checkCompletion()"> ${newTask}`;
+                ul.appendChild(li);
+                document.getElementById('newTask').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
