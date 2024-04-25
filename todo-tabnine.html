@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .todo-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .todo-item-description {
+            flex-grow: 1;
+        }
+
+        .completed {
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .add-todo {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .add-todo input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .add-todo button {
+            padding: 10px 20px;
+            background-color: #007aff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-todo button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo List App</h1>
+    <div class="todo-list">
+        <div class="todo-item">
+            <input type="checkbox" id="groceries" />
+            <label for="groceries" class="todo-item-description">Get Groceries</label>
+        </div>
+        <div class="todo-item">
+            <input type="checkbox" id="clothes" />
+            <label for="clothes" class="todo-item-description">Clean Clothes</label>
+        </div>
+        <div class="todo-item">
+            <input type="checkbox" id="dishes" />
+            <label for="dishes" class="todo-item-description">Wash Dishes</label>
+        </div>
+    </div>
+    <div class="add-todo">
+        <input type="text" placeholder="Add Todo..." />
+        <button>Add Todo</button>
+    </div>
+    <script>
+        const todoList = document.querySelector('.todo-list');
+        const addTodoInput = document.querySelector('.add-todo input[type="text"]');
+        const addTodoButton = document.querySelector('.add-todo button');
+
+        addTodoButton.addEventListener('click', () => {
+            const newTodoItem = document.createElement('div');
+            newTodoItem.classList.add('todo-item');
+            newTodoItem.innerHTML = `
+                <input type="checkbox" />
+                <label for="new-todo" class="todo-item-description">${addTodoInput.value}</label>
+            `;
+            todoList.appendChild(newTodoItem);
+            addTodoInput.value = '';
+        });
+
+        const checkboxes = document.querySelectorAll('.todo-item input[type="checkbox"]');
+        let allChecked = true;
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                allChecked = checkboxes.every(cb => cb.checked);
+                if (allChecked) {
+                    alert('All tasks completed!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
