@@ -1,6 +1,6 @@
 {
   "n_points": 100000,
-  "n_chunks": 42,
+  "n_chunks": 60,
   "chunk_files": [
     "chunks/0.json",
     "chunks/1.json",
@@ -43,6 +43,24 @@
     "chunks/38.json",
     "chunks/39.json",
     "chunks/40.json",
-    "chunks/41.json"
+    "chunks/41.json",
+    "chunks/42.json",
+    "chunks/43.json",
+    "chunks/44.json",
+    "chunks/45.json",
+    "chunks/46.json",
+    "chunks/47.json",
+    "chunks/48.json",
+    "chunks/49.json",
+    "chunks/50.json",
+    "chunks/51.json",
+    "chunks/52.json",
+    "chunks/53.json",
+    "chunks/54.json",
+    "chunks/55.json",
+    "chunks/56.json",
+    "chunks/57.json",
+    "chunks/58.json",
+    "chunks/59.json"
   ]
 }
