@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>UMAP Explorer</title>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Recipe Reviews · 3D UMAP</title>
 
 <style>
   html, body {
@@ -195,6 +195,44 @@
     -webkit-appearance: none; width: 11px; height: 11px;
     border-radius: 50%; background: rgba(255,255,255,0.85); cursor: pointer;
   }
+  .rslider {
+    position: relative; height: 28px; margin: 2px 0;
+    user-select: none; overflow: visible;
+  }
+  .rslider-track {
+    position: absolute; left: 0; right: 0;
+    top: calc(50% - 1.5px); height: 3px;
+    background: rgba(255,255,255,0.15); border-radius: 2px;
+    pointer-events: none;
+  }
+  .rslider-fill {
+    /* Tall transparent hit zone; visible bar via ::after */
+    position: absolute;
+    top: calc(50% - 11px); height: 22px;
+    background: rgba(255,255,255,0.001); /* near-zero so pointer events fire */
+    cursor: grab; z-index: 1; pointer-events: all;
+  }
+  .rslider-fill:active { cursor: grabbing; }
+  .rslider-fill::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; top: calc(50% - 1.5px); height: 3px;
+    background: rgba(78,121,167,0.9); border-radius: 2px;
+    pointer-events: none;
+  }
+  .rslider-thumb {
+    position: absolute; top: calc(50% - 9px);
+    width: 9px; height: 18px; box-sizing: border-box;
+    background: rgba(255,255,255,0.88);
+    border: 2px solid rgba(78,121,167,0.9);
+    cursor: grab; z-index: 3;
+  }
+  .rslider-thumb:active { cursor: grabbing; }
+  .rslider-thumb-lo {
+    border-radius: 10px 0 0 10px; border-right: none;
+  }
+  .rslider-thumb-hi {
+    border-radius: 0 10px 10px 0; border-left: none;
+  }
   .fc-toggle-row { display: flex; gap: 4px; flex-wrap: wrap; }
   .fc-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 3px 0; }
   .fc-val { font-size: 10px; color: rgba(255,255,255,0.55); min-width: 24px; text-align: right; font-family: sans-serif; }
@@ -237,30 +275,25 @@
       <div class="fc-btn active" id="fc-outline">Outline</div>
       <div class="fc-btn" id="fc-rating">Rating &#9733;</div>
     </div>
-    <div class="fc-sep"></div>
-    <div class="fc-row">
-      <span class="fc-label">Axes</span>
-      <div class="fc-btn active" id="fc-axes-toggle">Visible</div>
-    </div>
   </div>
   <div class="fc-group" id="fc-rating-panel">
-    <div class="fc-row" style="margin-bottom:3px;">
+    <div class="fc-row" style="margin-bottom:5px;">
       <span class="fc-label" style="min-width:unset;color:rgba(255,255,255,0.55);font-size:10px;letter-spacing:0.05em;">RATING FILTER</span>
+      <span style="margin-left:auto;font-size:10px;color:rgba(255,255,255,0.5);"><span id="fc-rmin-val">0</span> &ndash; <span id="fc-rmax-val">5</span> &#9733;</span>
     </div>
-    <div class="fc-row">
-      <span class="fc-val" style="min-width:28px;" id="fc-rmin-val">0.0</span>
-      <input class="fc-slider" id="fc-rmin" type="range" min="0" max="100" value="0"  step="1" style="flex:1;">
-    </div>
-    <div class="fc-row">
-      <span class="fc-val" style="min-width:28px;" id="fc-rmax-val">5.0</span>
-      <input class="fc-slider" id="fc-rmax" type="range" min="0" max="100" value="100" step="1" style="flex:1;">
+    <div class="rslider" id="rslider">
+      <div class="rslider-track">
+        <div class="rslider-fill" id="rslider-fill"></div>
+      </div>
+      <div class="rslider-thumb rslider-thumb-lo" id="rslider-lo"></div>
+      <div class="rslider-thumb rslider-thumb-hi" id="rslider-hi"></div>
     </div>
   </div>
 </div>
 <div id="sidebar">
   <div id="sidebar-search-wrap">
     <div id="sidebar-search-row">
-      <input id="sidebar-search" type="text" placeholder="Search reviews..." autocomplete="off" />
+      <input id="sidebar-search" type="text" placeholder="Search clusters..." autocomplete="off" />
       <button id="sidebar-search-clear" title="Clear search">&#10005;</button>
     </div>
     <div id="sidebar-btns">
@@ -299,20 +332,31 @@ function initSidebar() {
     updateStats();
   }
 
-  function updateStats() {
+  function updateStats(ratingLo, ratingHi) {
     const el = document.getElementById('sidebar-stats');
     if (!el) return;
+    const hasRatingFilter = (ratingLo !== undefined && (ratingLo > 0 || ratingHi < 1));
     const totalClusters = SIDEBAR_DATA.filter(c => !c.unclustered).length;
     const totalPts      = SIDEBAR_DATA.filter(c => !c.unclustered).reduce((s,c) => s+c.size, 0);
     const visClusters   = SIDEBAR_DATA.filter(c => !c.unclustered && traceVisible[c.traceIdx]).length;
     const visPts        = SIDEBAR_DATA.filter(c => !c.unclustered && traceVisible[c.traceIdx]).reduce((s,c) => s+c.size, 0);
     const selCount      = highlightedSet ? highlightedSet.size : 0;
     const fmt = n => n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n);
-    let html = '<span>'+fmt(visPts)+' / '+fmt(totalPts)+' pts</span>'
-             + '<span>'+visClusters+' / '+totalClusters+' clusters</span>';
+    let ptStr, clStr;
+    if (hasRatingFilter && window._getRatingFilteredCount && window._getFilteredClusterCount) {
+      const filteredPts  = window._getRatingFilteredCount(ratingLo, ratingHi, traceVisible);
+      const filteredClus = window._getFilteredClusterCount(ratingLo, ratingHi, traceVisible);
+      ptStr = fmt(filteredPts)+' / '+fmt(visPts)+' pts';
+      clStr = filteredClus+' / '+visClusters+' clusters';
+    } else {
+      ptStr = fmt(visPts)+' / '+fmt(totalPts)+' pts';
+      clStr = visClusters+' / '+totalClusters+' clusters';
+    }
+    let html = '<span>'+ptStr+'</span><span>'+clStr+'</span>';
     if (selCount > 0) html += '<span style="color:rgba(242,142,43,0.85);">'+selCount+' selected</span>';
     el.innerHTML = html;
   }
+  window._updateStats = updateStats;
 
   function applyHighlight(tidxSet) {
     highlightedSet = tidxSet;
@@ -320,7 +364,7 @@ function initSidebar() {
       el.classList.toggle('highlighted', tidxSet && tidxSet.has(parseInt(el.dataset.tidx)));
     });
     document.querySelectorAll('.cluster-row').forEach(row => {
-      const tidx = parseInt(row.querySelector('.cl-name')?.dataset.tidx);
+      const _cn = row.querySelector('.cl-name'); const tidx = _cn ? parseInt(_cn.dataset.tidx) : NaN;
       row.classList.toggle('selected', tidxSet && tidxSet.has(tidx));
     });
     redraw();
@@ -712,52 +756,66 @@ function initSidebar() {
 
   // -- Camera animation (spherical arc interpolation) --------------------------
   let camAnim=null;
-  function animateCameraTo(toPos, toTarget, ms){
-    const fp = camera.position.clone();
-    const ft = controls.target.clone();
-    const t0 = performance.now();
+  const MS_PER_RAD = 350;
+  const MS_MIN     = 200;
+  const MS_MAX     = 800;
 
-    const fromOffset = fp.clone().sub(ft);
-    const toOffset   = toPos.clone().sub(toTarget);
-    const fromDist   = fromOffset.length();
-    const toDist     = toOffset.length();
-    const fromDir    = fromOffset.clone().normalize();
-    const toDir      = toOffset.clone().normalize();
+  function animateCameraTo(toQ, toDist, toTarget){
+    const t0    = performance.now();
+    const fromQ = camera.quaternion.clone();
+    const fromDist = camera.position.distanceTo(controls.target);
+    const fromTarget = controls.target.clone();
 
-    // Build rotation quaternion that takes fromDir -> toDir.
-    // setFromUnitVectors is undefined when vectors are antiparallel (dot ~ -1).
-    // Handle that by picking an arbitrary perpendicular axis for 180-degree rotation.
-    const dot = fromDir.dot(toDir);
-    let rotQ;
-    if (dot < -0.9999) {
-      // Antiparallel: choose perpendicular axis
-      let perp = new THREE.Vector3(1,0,0);
-      if (Math.abs(fromDir.x) > 0.9) perp.set(0,1,0);
-      perp.crossVectors(perp, fromDir).normalize();
-      rotQ = new THREE.Quaternion().setFromAxisAngle(perp, Math.PI);
-    } else {
-      rotQ = new THREE.Quaternion().setFromUnitVectors(fromDir, toDir);
-    }
+    // Duration proportional to rotation angle
+    const cosHalf = Math.abs(fromQ.dot(toQ));
+    const angle   = 2 * Math.acos(Math.min(1, cosHalf));
+    const ms      = Math.max(MS_MIN, Math.min(MS_MAX, angle * MS_PER_RAD));
 
-    // Identity quaternion (no rotation = start)
-    const identQ = new THREE.Quaternion(); // (0,0,0,1)
+    // Camera local +Z is the "back" direction (camera looks down -Z in THREE.js)
+    const CAM_BACK = new THREE.Vector3(0, 0, 1);
 
     camAnim = now => {
       const t = Math.min((now - t0) / ms, 1);
-      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // ease in-out quad
+      const e = t * t * (3 - 2 * t);  // smoothstep
 
-      // Slerp rotation from identity -> rotQ, then apply to fromDir
-      const q   = identQ.clone().slerp(rotQ, e);
-      const dir = fromDir.clone().applyQuaternion(q);
+      // Slerp the full camera quaternion — single operation, no gimbal issues
+      const q = fromQ.clone().slerp(toQ, e);
 
-      const dist   = fromDist + (toDist   - fromDist)   * e;
-      const target = ft.clone().lerp(toTarget, e);
+      // Lerp distance and target
+      const dist   = fromDist + (toDist - fromDist) * e;
+      const target = fromTarget.clone().lerp(toTarget, e);
 
-      camera.position.copy(target).addScaledVector(dir, dist);
+      // Reconstruct position: target + (camera back direction * dist)
+      const back = CAM_BACK.clone().applyQuaternion(q);
+      camera.position.copy(target).addScaledVector(back, dist);
+
+      // Apply quaternion directly — bypass OrbitControls during animation
+      camera.quaternion.copy(q);
+
+      // Sync controls.target but DON'T call controls.update() mid-animation
+      // as it would re-derive camera orientation from position and fight the slerp
       controls.target.copy(target);
-      controls.update();
+
+      if (t >= 1) {
+        const finalDir = new THREE.Vector3(0,0,1).applyQuaternion(toQ);
+        camera.position.copy(toTarget).addScaledVector(finalDir, toDist);
+        camera.quaternion.copy(toQ);
+        camera.up.set(0,1,0);
+        controls.target.copy(toTarget);
+        controls.update();
+      }
+
       return t < 1;
     };
+  }
+
+  function quatFromLookUp(lookDir, up) {
+    const m = new THREE.Matrix4().lookAt(
+      new THREE.Vector3(0,0,0),
+      lookDir.clone().normalize(),
+      up
+    );
+    return new THREE.Quaternion().setFromRotationMatrix(m);
   }
 
   // lockedIdx: point whose tooltip is pinned; -1 = none
@@ -769,7 +827,10 @@ function initSidebar() {
   (function animate(){
     requestAnimationFrame(animate);
     if(camAnim&&!camAnim(performance.now()))camAnim=null;
-    controls.update();
+    // Only let OrbitControls update when not animating — during animation
+    // we set camera.position and camera.quaternion directly, and controls.update()
+    // would re-derive orientation from position and fight the slerp
+    if(!camAnim) controls.update();
     uniforms.uNear.value = camera.near;
     uniforms.uFar.value  = camera.position.distanceTo(controls.target)*2.5;
     renderer.render(scene,camera);
@@ -801,6 +862,35 @@ function initSidebar() {
     posAttr.needsUpdate=true; colAttr.needsUpdate=true;
   }
   window.threeRedraw=(vis,hl)=>{traceVisible=vis;highlightedSet=hl;applyColors();};
+  // Expose function to update rating filter bounds from slider JS
+  window._setRatingFilter = function(lo, hi) {
+    ratingFilterLo = lo; ratingFilterHi = hi;
+  };
+  // Count points passing both visibility and rating filter (for stats bar)
+  window._getRatingFilteredCount = function(ratingLo, ratingHi, visArr) {
+    let count = 0;
+    for (let i = 0; i < loaded; i++) {
+      const t = traceArr[i];
+      if (visArr && !visArr[t]) continue;
+      if (isNaN(posAttr.array[i*3])) continue;
+      const r = ratArr[i];
+      if (r < 0) continue; // no rating data
+      if (r >= ratingLo && r <= ratingHi) count++;
+    }
+    return count;
+  };
+  // Count visible clusters where at least one point passes the rating filter
+  window._getFilteredClusterCount = function(ratingLo, ratingHi, visArr) {
+    const passing = new Set();
+    for (let i = 0; i < loaded; i++) {
+      const t = traceArr[i];
+      if (visArr && !visArr[t]) continue;
+      if (isNaN(posAttr.array[i*3])) continue;
+      const r = ratArr[i];
+      if (r < 0 || (r >= ratingLo && r <= ratingHi)) passing.add(t);
+    }
+    return passing.size;
+  };
 
   // -- Hover --------------------------------------------------------------------
   const raycaster=new THREE.Raycaster();
@@ -881,6 +971,15 @@ function initSidebar() {
     tipArrow.style.top=arrowY+'px'; tipArrow.style.transform='translateY(-50%) rotate(45deg)';
   }
 
+  // Current rating filter bounds (normalised 0-1), kept in sync with slider
+  let ratingFilterLo = 0.0, ratingFilterHi = 1.0;
+
+  function pointPassesRatingFilter(i) {
+    const r = ratArr[i];
+    if (r < 0) return true;  // no rating data = always visible
+    return r >= ratingFilterLo && r <= ratingFilterHi;
+  }
+
   function raycastBest(e) {
     const rc = renderer.domElement.getBoundingClientRect();
     mouse.x =  ((e.clientX-rc.left)/rc.width)*2-1;
@@ -894,6 +993,7 @@ function initSidebar() {
     for (const hit of hits) {
       const i = hit.index;
       if (isNaN(posAttr.array[i*3])) continue;
+      if (!pointPassesRatingFilter(i)) continue;  // skip filtered-out points
       const pt = new THREE.Vector3(posAttr.array[i*3],posAttr.array[i*3+1],posAttr.array[i*3+2]);
       const d = raycaster.ray.distanceToPoint(pt);
       if (d < bestD) { bestD = d; best = i; }
@@ -907,11 +1007,14 @@ function initSidebar() {
 
   renderer.domElement.addEventListener('pointerdown', e => {
     mouseDownX = e.clientX; mouseDownY = e.clientY;
+    // Hide hover tooltip when a drag/pan starts
+    if (lockedIdx === -1) { tip.style.display = 'none'; lastIdx = -1; }
   });
 
-  // Hover: only show tooltip when not locked
+  // Hover: only show tooltip when not locked and not dragging
   renderer.domElement.addEventListener('pointermove', e => {
     if (lockedIdx !== -1) return;
+    if (e.buttons !== 0) return;  // any button held = dragging/panning, skip
     if (hoverThrottled) return; hoverThrottled = true;
     requestAnimationFrame(() => { hoverThrottled = false; });
     const best = raycastBest(e);
@@ -989,14 +1092,6 @@ function initSidebar() {
       sizeVal.textContent=v; uniforms.uPointSize.value=v;
     });
   }
-  const axesBtn=document.getElementById('fc-axes-toggle');
-  if(axesBtn){
-    axesBtn.addEventListener('click',()=>{
-      setAxesVisible(!axesVisible);
-      axesBtn.textContent=axesVisible?'Visible':'Hidden';
-      axesBtn.classList.toggle('active',axesVisible);
-    });
-  }
   function wireToggle(id,key){
     const btn=document.getElementById(id); if(!btn)return;
     btn.addEventListener('click',()=>{
@@ -1008,29 +1103,111 @@ function initSidebar() {
   wireToggle('fc-outline','uOutline');
   wireToggle('fc-rating','uRatingShade');
 
-  const rminSlider=document.getElementById('fc-rmin');
-  const rmaxSlider=document.getElementById('fc-rmax');
-  const rminVal=document.getElementById('fc-rmin-val');
-  const rmaxVal=document.getElementById('fc-rmax-val');
-  function updateRatingFilter(){
-    const lo=parseFloat(rminSlider.value)/100,hi=parseFloat(rmaxSlider.value)/100;
-    uniforms.uRatingMin.value=Math.min(lo,hi); uniforms.uRatingMax.value=Math.max(lo,hi);
-    rminVal.textContent=(Math.min(lo,hi)*5).toFixed(1);
-    rmaxVal.textContent=(Math.max(lo,hi)*5).toFixed(1);
-  }
-  if(rminSlider)rminSlider.addEventListener('input',updateRatingFilter);
-  if(rmaxSlider)rmaxSlider.addEventListener('input',updateRatingFilter);
+  // Custom dual-handle rating slider
+  (function(){
+    const STEPS = 5;  // 0..5 inclusive
+    let lo = 0, hi = 5;
+    const rslider  = document.getElementById('rslider');
+    const fill     = document.getElementById('rslider-fill');
+    const thumbLo  = document.getElementById('rslider-lo');
+    const thumbHi  = document.getElementById('rslider-hi');
+    const rminVal  = document.getElementById('fc-rmin-val');
+    const rmaxVal  = document.getElementById('fc-rmax-val');
+    if (!rslider) return;
 
-  const DIST=3.5,Z=new THREE.Vector3(0,0,0);
-  const camPresets={
-    'fc-reset':[DEFAULT_POS.clone(),DEFAULT_TARGET.clone()],
-    'fc-top':[new THREE.Vector3(0,DIST,0.001),Z.clone()],
-    'fc-front':[new THREE.Vector3(0,0.001,DIST),Z.clone()],
-    'fc-side':[new THREE.Vector3(DIST,0.001,0),Z.clone()],
+    function pct(v){ return v/STEPS*100; }
+
+    function applyState(){
+      fill.style.left  = pct(lo)+'%';
+      fill.style.width = pct(hi-lo)+'%';
+      // thumbs: offset by half their width (4.5px) to centre on the step position
+      thumbLo.style.left = 'calc('+pct(lo)+'% - 4.5px)';
+      thumbHi.style.left = 'calc('+pct(hi)+'% - 4.5px)';
+      if(rminVal) rminVal.textContent = lo;
+      if(rmaxVal) rmaxVal.textContent = hi;
+      uniforms.uRatingMin.value = lo/STEPS;
+      uniforms.uRatingMax.value = hi/STEPS;
+      if(window._setRatingFilter) window._setRatingFilter(lo/STEPS, hi/STEPS);
+      if(window._updateStats) window._updateStats(lo/STEPS, hi/STEPS);
+    }
+
+    function stepFromX(clientX){
+      const rect = rslider.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      return Math.round(ratio * STEPS);
+    }
+
+    function attachDrag(el, e, onMove){
+      el.setPointerCapture(e.pointerId);
+      el.addEventListener('pointermove', onMove);
+      function up(){ el.removeEventListener('pointermove',onMove); el.removeEventListener('pointerup',up); }
+      el.addEventListener('pointerup', up);
+    }
+
+    thumbLo.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      attachDrag(thumbLo, e, e2 => { lo = Math.min(stepFromX(e2.clientX), hi-1); if(lo<0)lo=0; applyState(); });
+    });
+
+    thumbHi.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      attachDrag(thumbHi, e, e2 => { hi = Math.max(stepFromX(e2.clientX), lo+1); if(hi>STEPS)hi=STEPS; applyState(); });
+    });
+
+    // Drag on fill bar: move both handles together (height handled by CSS)
+    fill.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startLo = lo, startHi = hi;
+      const rect = rslider.getBoundingClientRect();
+      const pxPerStep = rect.width / STEPS;
+      attachDrag(fill, e, e2 => {
+        const dx = e2.clientX - startX;
+        const ds = Math.round(dx / pxPerStep);
+        let nlo = startLo + ds, nhi = startHi + ds;
+        if(nlo < 0){ nlo=0; nhi=startHi-startLo; }
+        if(nhi > STEPS){ nhi=STEPS; nlo=STEPS-(startHi-startLo); }
+        lo=nlo; hi=nhi; applyState();
+      });
+    });
+
+    // Click on track outside fill: snap nearest handle
+    rslider.addEventListener('pointerdown', e => {
+      if(e.target !== rslider && e.target !== rslider.querySelector('.rslider-track')) return;
+      const s = stepFromX(e.clientX);
+      if(Math.abs(s-lo) <= Math.abs(s-hi)) lo = Math.min(s, hi-1);
+      else hi = Math.max(s, lo+1);
+      if(lo<0)lo=0; if(hi>STEPS)hi=STEPS;
+      applyState();
+    });
+
+    applyState();
+  })();
+
+  const DIST=3.5, Z=new THREE.Vector3(0,0,0);
+
+  // Presets: each is [quaternion, distance, target] — no position hacks
+  const camPresets = {
+    'fc-reset': [
+      quatFromLookUp(new THREE.Vector3(-1.8,-1.4,-2.8).normalize(), new THREE.Vector3(0,1,0)),
+      DEFAULT_POS.distanceTo(DEFAULT_TARGET), Z.clone()
+    ],
+    'fc-top': [
+      quatFromLookUp(new THREE.Vector3(0,-1,-0.00001).normalize(), new THREE.Vector3(0,0,-1)),
+      DIST, Z.clone()
+    ],
+    'fc-front': [
+      quatFromLookUp(new THREE.Vector3(0,0,-1), new THREE.Vector3(0,1,0)),
+      DIST, Z.clone()
+    ],
+    'fc-side': [
+      quatFromLookUp(new THREE.Vector3(-1,0,0), new THREE.Vector3(0,1,0)),
+      DIST, Z.clone()
+    ],
   };
-  Object.entries(camPresets).forEach(([id,[pos,tgt]])=>{
+  Object.entries(camPresets).forEach(([id,[q,dist,tgt]])=>{
     const btn=document.getElementById(id);
-    if(btn)btn.addEventListener('click',()=>animateCameraTo(pos,tgt,600));
+    if(btn) btn.addEventListener('click',()=>animateCameraTo(q,dist,tgt));
   });
 
   async function loadChunk(url) {
