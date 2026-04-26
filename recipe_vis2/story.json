@@ -1,0 +1,67 @@
+{
+  "steps": [
+    {
+      "title": "230,000+ Recipes",
+      "subtitle": "Each point is a recipe from Food.com, projected into 3D by semantic similarity. Recipes with similar ingredients and techniques cluster together.",
+      "colorBy": "cuisines",
+      "camera": { "position": [10.164, 8.653, 14.061], "target": [5.948, 5.668, 4.948] },
+      "highlight": null
+    },
+    {
+      "title": "American Cuisine Dominates",
+      "subtitle": "American recipes form the largest cluster — over 30,000 recipes from home cooking across every region of the US.",
+      "colorBy": "cuisines",
+      "camera": { "position": [12.719, 11.133, -3.188], "target": [3.685, 4.771, 4.394] },
+      "highlight": { "family": "cuisines", "label": "american" }
+    },
+    {
+      "title": "Mexican Cuisine",
+      "subtitle": "",
+      "colorBy": "cuisines",
+      "camera": { "position": [-6.161, 5.205, -5.165], "target": [2.242, 4.032, 5.207] },
+      "highlight": { "family": "cuisines", "label": "mexican" }
+    },
+    {
+      "title": "Italian Cuisine",
+      "subtitle": "",
+      "colorBy": "cuisines",
+      "camera": { "position": [-4.325, 7.137, -6.408], "target": [2.381, 4.214, 4.819] },
+      "highlight": { "family": "cuisines", "label": "italian" }
+    },
+    {
+      "title": "Desserts vs Main Dishes",
+      "subtitle": "Switching to meal type reveals a clear separation. Desserts cluster in one region, main dishes in another.",
+      "colorBy": "meal_types",
+      "camera": { "position": [7.146, 1.805, -7.447], "target": [2.724, 4.476, 4.918] },
+      "highlight": null
+    },
+    {
+      "title": "The Longest Recipes",
+      "subtitle": "Among the longest recipes, one cluster stands out — densely packed with stews and chilis. Hover over the points to see for yourself.",
+      "colorBy": "minutes",
+      "camera": { "position": [-2.272, 6.689, 4.91], "target": [3.713, 1.809, 9.604] },
+      "highlight": { "family": "minutes", "label": "4+ hours" }
+    },
+    {
+      "title": "The 5-Star Split",
+      "subtitle": "Coloring by average rating reveals a striking pattern. A large cluster of recipes sits at a perfect 5 stars, clearly separated from recipes with lower ratings.",
+      "colorBy": "avg_rating",
+      "camera": { "position": [3.604, 18.42, -1.725], "target": [3.525, 4.695, 3.778] },
+      "highlight": { "family": "avg_rating", "label": "5 stars" }
+    },
+    {
+      "title": "Very Few Recipes Have 100+ Reviews",
+      "subtitle": "The recipes that have broken through to wide audiences are rare. Those that did tend to be approachable, familiar dishes — the kind people make on a weeknight and feel compelled to rate.",
+      "colorBy": "n_ratings",
+      "camera": { "position": [11.847, 11.415, -3.242], "target": [5.603, 6.493, 2.776] },
+      "highlight": { "family": "n_ratings", "label": "100+ reviews" }
+    },
+    {
+      "title": "Most Recipes Have Very Few Reviews",
+      "subtitle": "The majority of recipes on Food.com have received only 1 to 5 reviews. A vast, mostly unreviewed collection — each point a recipe that someone made and shared, but few ever rated.",
+      "colorBy": "n_ratings",
+      "camera": { "position": [1.518, 18.164, -1.986], "target": [3.525, 4.695, 3.778] },
+      "highlight": null
+    }
+  ]
+}

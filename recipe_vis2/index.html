@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food.com Recipes</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ── Top bar ── -->
+  <div id="topbar">
+    <div class="topbar-left">
+      <span id="site-title">Food.com Recipes</span>
+    </div>
+    <div class="topbar-center">
+      <button class="mode-btn active" id="btn-story">Story</button>
+      <button class="mode-btn" id="btn-explore">Explore</button>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" id="btn-copy-state" title="Copy camera + highlight state for story.json">⎘ Copy state</button>
+      <button class="topbar-btn" id="btn-about">About</button>
+    </div>
+  </div>
+
+  <!-- ── 3D canvas ── -->
+  <canvas id="three-canvas"></canvas>
+
+  <!-- ── Left panel ── -->
+  <div id="left-panel">
+
+    <!-- Story mode -->
+    <div id="story-panel">
+      <div id="story-content">
+        <h2 id="story-title"></h2>
+        <p id="story-subtitle"></p>
+      </div>
+      <div id="story-nav">
+        <button class="nav-btn" id="btn-prev">&#8592; Prev</button>
+        <span id="story-counter"></span>
+        <button class="nav-btn" id="btn-next">Next &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Explore mode -->
+    <div id="explore-panel">
+      <div id="explore-default">
+        <h2>Explore Recipes</h2>
+        <p class="explore-hint">Click a point to see recipe details.<br>Double-click to isolate its category.</p>
+      </div>
+      <div id="explore-recipe">
+        <div id="recipe-name"></div>
+        <div id="recipe-tags"></div>
+        <div id="recipe-stats"></div>
+        <div id="recipe-ingredients"></div>
+        <div id="recipe-description"></div>
+      </div>
+      <div id="explore-cluster">
+        <div id="cluster-name"></div>
+        <div id="cluster-count"></div>
+        <div id="cluster-placeholder">Cluster details — coming soon</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Right panel ── -->
+  <div id="right-panel">
+    <div id="category-tabs"></div>
+    <div id="category-list"></div>
+  </div>
+
+  <!-- ── Floating camera controls ── -->
+  <div id="float-controls">
+    <div class="fc-group">
+      <div class="fc-label-head">CAMERA</div>
+      <div class="fc-row">
+        <button class="fc-btn" id="fc-reset">&#8635; Reset</button>
+        <button class="fc-btn" id="fc-top">Top</button>
+        <button class="fc-btn" id="fc-front">Front</button>
+        <button class="fc-btn" id="fc-side">Side</button>
+      </div>
+      <div class="fc-hint">Drag · Scroll zoom · Shift+drag pan</div>
+    </div>
+    <div class="fc-group">
+      <div class="fc-label-head">DISPLAY</div>
+      <div class="fc-row fc-row-slider">
+        <span class="fc-label">Size</span>
+        <input class="fc-slider" id="fc-size" type="range" min="0.5" max="8" value="4" step="0.5">
+        <span class="fc-val" id="fc-size-val">4×</span>
+      </div>
+      <div class="fc-row">
+        <button class="fc-btn active" id="fc-outline">Outline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Hover tooltip ── -->
+  <div id="hover-tip">
+    <div id="hover-tip-arrow"></div>
+    <div id="hover-tip-inner">
+      <div class="ht-name"></div>
+      <div class="ht-tags"></div>
+      <div class="ht-meta"></div>
+      <div class="ht-desc"></div>
+    </div>
+  </div>
+
+  <!-- ── Progress ── -->
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label">Loading&hellip;</div>
+
+  <!-- ── About modal ── -->
+  <div id="about-overlay">
+    <div id="about-modal">
+      <h2>Food.com Recipes</h2>
+      <p>230,000+ recipes from Food.com projected into 3D using UMAP on semantic embeddings. Each point represents a recipe. Proximity indicates semantic similarity.</p>
+      <p>Dataset: <a href="https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions" target="_blank">Food.com Recipes and User Interactions</a></p>
+      <button id="about-close">Close</button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
