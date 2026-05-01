@@ -4,14 +4,14 @@
   "chunk_size": 500,
   "coord_bounds": {
     "min": [
-      -2.3279378414154053,
-      -0.6644484996795654,
-      -0.1560133695602417
+      -3.938239336013794,
+      -4.190700531005859,
+      0.2112332284450531
     ],
     "max": [
-      10.529431343078613,
-      10.672956466674805,
-      9.791452407836914
+      10.627917289733887,
+      6.7684006690979,
+      9.422160148620605
     ]
   },
   "attribute_layout": [
@@ -53,7 +53,7 @@
     },
     {
       "name": "submitted",
-      "dtype": "float32"
+      "dtype": "uint8"
     }
   ],
   "categories": [
@@ -61,6 +61,7 @@
       "name": "avg_rating",
       "attribute": "avg_rating",
       "labels": [
+        "no rating",
         "1 star",
         "2 stars",
         "3 stars",
@@ -77,6 +78,7 @@
         "african",
         "american",
         "australian",
+        "cajun",
         "canadian",
         "caribbean",
         "central-american",
@@ -89,9 +91,14 @@
         "italian",
         "mexican",
         "middle-eastern",
+        "midwestern",
+        "northeastern-united-states",
         "scandinavian",
         "south-american",
+        "southern-united-states",
+        "southwestern-united-states",
         "spanish",
+        "tex-mex",
         "thai"
       ]
     },
@@ -110,31 +117,35 @@
       "name": "minutes",
       "attribute": "minutes",
       "labels": [
-        "~15 min",
-        "~30 min",
-        "~1 hour",
-        "~2 hours",
-        "4+ hours"
+        "<15 min",
+        "16-30 min",
+        "31-60 min",
+        "1-2 hrs",
+        "2-4 hrs",
+        "4+ hrs"
       ]
     },
     {
       "name": "n_ingredients",
       "attribute": "n_ingredients",
       "labels": [
-        "1-6 ingredients",
-        "7-10 ingredients",
-        "11-14 ingredients",
-        "15+ ingredients"
+        "<5 ingredients",
+        "5-10 ingredients",
+        "11-20 ingredients",
+        "20+ ingredients"
       ]
     },
     {
       "name": "n_ratings",
       "attribute": "n_ratings",
       "labels": [
+        "no reviews",
         "1 review",
-        "~5 reviews",
-        "~15 reviews",
-        "~50 reviews",
+        "2-5 reviews",
+        "6-10 reviews",
+        "11-20 reviews",
+        "21-50 reviews",
+        "51-100 reviews",
         "100+ reviews"
       ]
     },
@@ -144,15 +155,37 @@
       "labels": [
         "1-5 steps",
         "6-10 steps",
-        "11-20 steps",
-        "21+ steps"
+        "11-15 steps",
+        "16-20 steps",
+        "20+ steps"
+      ]
+    },
+    {
+      "name": "submitted",
+      "attribute": "submitted",
+      "labels": [
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
       ]
     }
   ],
-  "scalar_attributes": [
-    {
-      "name": "date",
-      "attribute": "submitted"
-    }
-  ]
+  "scalar_attributes": []
 }

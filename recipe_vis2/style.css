@@ -64,7 +64,7 @@ html, body {
 #three-canvas {
   position: fixed;
   top: 44px;
-  left: 280px;
+  left: 0;
   display: block;
   outline: none;
 }
@@ -72,10 +72,14 @@ html, body {
 /* ── Left panel ────────────────────────────────────────────────────────── */
 #left-panel {
   position: fixed;
-  top: 44px; left: 0; bottom: 0;
-  width: 280px;
-  background: rgba(13, 13, 24, 0.97);
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  top: 56px; left: 12px; bottom: 12px;
+  width: 290px;
+  height: 400px;
+  background: rgba(15, 15, 28, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -230,14 +234,16 @@ html, body {
 
 /* ── Right panel ───────────────────────────────────────────────────────── */
 #right-panel {
-  position: fixed;
-  top: 44px; right: 0; bottom: 0;
-  width: 270px;
-  background: rgba(13, 13, 24, 0.97);
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  /* flex: 1; */
+  height: 400px;
+  min-height: 0;
+  background: rgba(15, 15, 28, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
   overflow: hidden;
 }
 
@@ -264,8 +270,8 @@ html, body {
   white-space: nowrap;
 }
 .cat-tab:hover  { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.75); }
-.cat-tab.active { background: rgba(13,13,24,0.97); border-color: rgba(255,255,255,0.10);
-                  color: rgba(255,255,255,0.88); border-bottom-color: rgba(13,13,24,0.97); }
+.cat-tab.active { background: rgba(15,15,28,0.88); border-color: rgba(255,255,255,0.10);
+                  color: rgba(255,255,255,0.88); border-bottom-color: rgba(15,15,28,0.88); }
 
 #category-list {
   flex: 1;
@@ -310,64 +316,142 @@ html, body {
   color: rgba(255,255,255,0.24);
 }
 
-/* ── Floating controls ─────────────────────────────────────────────────── */
-#float-controls {
+/* ── Right column ──────────────────────────────────────────────────────── */
+#right-column {
   position: fixed;
-  top: 56px; right: 282px;
-  z-index: 500;
+  top: 56px; right: 12px; bottom: 12px;
+  width: 290px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  z-index: 1000;
   user-select: none;
 }
 
-.fc-group {
-  background: rgba(15, 15, 28, 0.88);
-  border: 1px solid rgba(255,255,255,0.10);
+/* ── Share popup ───────────────────────────────────────────────────────── */
+#share-popup {
+  position: fixed;
+  top: 52px;
+  right: 12px;
+  width: 300px;
+  background: rgba(22, 22, 36, 0.98);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 8px;
-  padding: 8px 10px;
-  display: flex;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.60);
+  display: none;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
+  z-index: 3000;
   backdrop-filter: blur(8px);
 }
+#share-popup.open { display: flex; }
 
-.fc-label-head { font-size: 9px; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); font-weight: 600; }
-.fc-hint       { font-size: 9px; color: rgba(255,255,255,0.22); }
+#share-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
 
-.fc-row { display: flex; gap: 4px; align-items: center; }
-.fc-row-slider { gap: 6px; }
-.fc-label { font-size: 10px; color: rgba(255,255,255,0.38); min-width: 28px; }
-.fc-val   { font-size: 10px; color: rgba(255,255,255,0.45); min-width: 24px; text-align: right; }
+#share-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 13px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+#share-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.90); }
 
-.fc-slider {
+#share-url-row {
+  position: relative;
+  margin-top: 6px;
+}
+
+#share-url {
+  width: 100%;
+  font-size: 11px;
+  padding: 8px 58px 8px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 5px;
+  color: rgba(255,255,255,0.60);
+  outline: none;
+  cursor: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#share-view-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.60);
+  cursor: pointer;
+  user-select: none;
+}
+#share-view-label input[type="checkbox"] { cursor: pointer; accent-color: #4e79a7; }
+
+#share-copy {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  padding: 3px 10px;
+  background: rgba(78,121,167,1.00);
+  border: 1px solid rgba(78,121,167,1.00);
+  border-radius: 4px;
+  color: rgba(255,255,255,1.00);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+#share-copy:hover { background: rgba(72,115,155,1.00); }
+
+/* ── Display widget ────────────────────────────────────────────────────── */
+#display-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 40px;
+  width: 230px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 15, 28, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 5px 12px 5px 10px;
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  user-select: none;
+}
+
+.sw-label { font-size: 10px; color: rgba(255,255,255,0.35); white-space: nowrap; }
+.sw-val   { font-size: 10px; color: rgba(255,255,255,0.40); min-width: 22px; text-align: right; }
+
+.sw-slider {
   -webkit-appearance: none; appearance: none;
   flex: 1; height: 3px;
   background: rgba(255,255,255,0.16); border-radius: 2px;
   outline: none; cursor: pointer;
 }
-.fc-slider::-webkit-slider-thumb {
+.sw-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 12px; height: 12px; border-radius: 50%;
   background: rgba(255,255,255,0.68); cursor: pointer;
 }
-.fc-slider::-moz-range-thumb {
+.sw-slider::-moz-range-thumb {
   width: 12px; height: 12px; border-radius: 50%;
   background: rgba(255,255,255,0.68); cursor: pointer; border: none;
 }
-
-.fc-btn {
-  font-size: 11px; padding: 3px 8px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 4px;
-  color: rgba(255,255,255,0.62);
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-  white-space: nowrap;
-}
-.fc-btn:hover  { background: rgba(255,255,255,0.13); color: rgba(255,255,255,0.90); }
-.fc-btn.active { background: rgba(78,121,167,0.35); border-color: rgba(78,121,167,0.60); color: rgba(255,255,255,0.90); }
 
 /* ── Hover tooltip ─────────────────────────────────────────────────────── */
 #hover-tip {
@@ -457,7 +541,7 @@ html, body {
 
 /* ── Progress ──────────────────────────────────────────────────────────── */
 #progress-wrap {
-  position: fixed; bottom: 0; left: 280px; right: 270px;
+  position: fixed; bottom: 0; left: 0; right: 0;
   height: 3px; background: rgba(255,255,255,0.06); z-index: 9999;
 }
 #progress-bar {
@@ -465,9 +549,86 @@ html, body {
   background: #4e79a7; transition: width 0.15s ease;
 }
 #progress-label {
-  position: fixed; bottom: 7px; left: 292px;
+  position: fixed; bottom: 7px; left: 12px;
   font-size: 11px; color: rgba(255,255,255,0.32);
   z-index: 9999; pointer-events: none;
+}
+
+/* ── Chart panel ───────────────────────────────────────────────────────── */
+#chart-panel {
+  position: fixed;
+  bottom: 12px; left: 12px;
+  width: 290px;
+  background: rgba(15, 15, 28, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+#chart-panel.open { display: flex; }
+
+#chart-panel-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 7px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+#chart-panel-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+}
+
+#chart-panel-body {
+  flex: 1;
+  padding: 10px 12px;
+  overflow: hidden;
+}
+
+/* ── Story content blocks ──────────────────────────────────────────────── */
+.story-heading {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.90);
+  margin-bottom: 10px;
+}
+
+.story-body {
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.60);
+  margin-bottom: 8px;
+}
+
+.story-caption {
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.38);
+  margin-bottom: 8px;
+}
+
+.story-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.48);
+  font-style: italic;
+  padding: 8px 10px;
+  border-left: 2px solid rgba(78,121,167,0.45);
+  margin-bottom: 8px;
+}
+
+.story-chart-inline {
+  margin: 10px 0 6px;
 }
 
 /* ── About modal ───────────────────────────────────────────────────────── */
@@ -482,6 +643,7 @@ html, body {
 #about-overlay.open { display: flex; }
 
 #about-modal {
+  position: relative;
   background: rgb(22,22,36);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 10px;
@@ -506,11 +668,17 @@ html, body {
 #about-modal a:hover { text-decoration: underline; }
 
 #about-close {
-  margin-top: 8px;
-  font-size: 12px; padding: 6px 18px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 13px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 5px; color: rgba(255,255,255,0.65);
-  cursor: pointer; transition: background 0.12s;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
 }
 #about-close:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.90); }

@@ -4,8 +4,8 @@ import { DRACOLoader }   from 'three/addons/loaders/DRACOLoader.js';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const DATA       = 'data/';
-const LEFT_W     = 280;
-const RIGHT_W    = 270;
+const LEFT_W     = 0;
+const RIGHT_W    = 0;
 const TOPBAR_H   = 44;
 const CAT_TEX_W  = 4096;   // texture width for category data buffer
 const MAX_LABELS = 64;     // max labels per category family for uniform arrays
@@ -283,21 +283,18 @@ function initScene(palette) {
   // Initial alpha cache (all visible)
   alphaCache = new Float32Array(N).fill(1.0);
 
-  // UI wiring
-  document.getElementById('fc-reset').addEventListener('click', () => setCameraPreset('reset'));
-  document.getElementById('fc-top').addEventListener('click',   () => setCameraPreset('top'));
-  document.getElementById('fc-front').addEventListener('click', () => setCameraPreset('front'));
-  document.getElementById('fc-side').addEventListener('click',  () => setCameraPreset('side'));
+  // UI wiring — elements may be absent if their panel is commented out in HTML
+  document.getElementById('fc-reset')?.addEventListener('click', () => setCameraPreset('reset'));
+  document.getElementById('fc-top')?.addEventListener('click',   () => setCameraPreset('top'));
+  document.getElementById('fc-front')?.addEventListener('click', () => setCameraPreset('front'));
+  document.getElementById('fc-side')?.addEventListener('click',  () => setCameraPreset('side'));
 
+  const SIZE_MULTIPLIERS = [0.25, 0.5, 1.0, 2.0];
   const sizeSlider = document.getElementById('fc-size');
-  sizeSlider.addEventListener('input', () => {
-    uniforms.uPointSize.value = parseFloat(sizeSlider.value);
-    document.getElementById('fc-size-val').textContent = sizeSlider.value + '×';
-  });
-
-  const outlineBtn = document.getElementById('fc-outline');
-  outlineBtn.addEventListener('click', () => {
-    uniforms.uOutline.value = outlineBtn.classList.toggle('active') ? 1.0 : 0.0;
+  sizeSlider?.addEventListener('input', () => {
+    const mul = SIZE_MULTIPLIERS[parseInt(sizeSlider.value)];
+    uniforms.uPointSize.value = 4.0 * mul;
+    document.getElementById('fc-size-val').textContent = mul + '×';
   });
 
   window.addEventListener('resize', onResize);
@@ -321,7 +318,14 @@ function setHighlightLabel(labelIdx) {
     categoryModes[i] = (labelIdx < 0 || i === labelIdx) ? 0 : 2;
   }
   uniforms.uCategoryModes.value = Array.from(categoryModes);
-  alphaCache.fill(1.0); // all points always raycasted
+  if (labelIdx < 0) {
+    alphaCache.fill(1.0);
+  } else {
+    const famData = getCategoryFamilyData(activeFamilyIdx);
+    for (let i = 0; i < N; i++) {
+      alphaCache[i] = famData[i] === labelIdx ? 1.0 : 0.0;
+    }
+  }
   renderCategoryList();
 }
 
@@ -500,11 +504,12 @@ function onPointerMove(e) {
     const d = Math.hypot(e.clientX - mouseDownX, e.clientY - mouseDownY);
     if (d > DRAG_THRESH) { hideHoverTip(); return; }
   }
+  if (lockedIdx >= 0) return;
   const idx = raycastBest(e);
   if (idx >= 0) {
     showHoverTip(idx);
   } else {
-    if (lockedIdx < 0) hideHoverTip();
+    hideHoverTip();
   }
 }
 
@@ -780,15 +785,21 @@ function showRecipeInfo(idx) {
     const tagsEl = document.getElementById('recipe-tags');
     tagsEl.innerHTML = '';
     meta.categories.forEach((cat, fi) => {
-      const famData = getCategoryFamilyData(fi);
-      const catId   = famData[idx];
-      const label   = cat.labels[catId] ?? '';
-      if (label) {
-        const tag = document.createElement('span');
-        tag.className   = 'recipe-tag';
-        tag.textContent = label;
-        tagsEl.appendChild(tag);
-      }
+      const famData  = getCategoryFamilyData(fi);
+      const labelIdx = famData[idx];
+      const label    = cat.labels[labelIdx] ?? '';
+      if (!label) return;
+      const [r, g, b] = getPaletteRgb(labelIdx);
+      const tr = Math.round(r * 0.45 + 255 * 0.55);
+      const tg = Math.round(g * 0.45 + 255 * 0.55);
+      const tb = Math.round(b * 0.45 + 255 * 0.55);
+      const tag = document.createElement('span');
+      tag.className        = 'recipe-tag';
+      tag.textContent      = label;
+      tag.style.background  = `rgba(${r},${g},${b},0.35)`;
+      tag.style.borderColor = `rgba(${r},${g},${b},0.80)`;
+      tag.style.color       = `rgb(${tr},${tg},${tb})`;
+      tagsEl.appendChild(tag);
     });
 
     const stats = [];
@@ -827,6 +838,239 @@ function showClusterInfo(labelIdx) {
   document.getElementById('cluster-count').textContent = `${count.toLocaleString()} recipes`;
 }
 
+// ── Chart panel ───────────────────────────────────────────────────────────────
+function showChartPanel(config, data) {
+  document.getElementById('chart-panel-title').textContent = config.title || '';
+  const body = document.getElementById('chart-panel-body');
+  body.innerHTML = '';
+  document.getElementById('chart-panel').classList.add('open');
+  requestAnimationFrame(() => renderChart(body, config, data));
+}
+
+function hideChartPanel() {
+  document.getElementById('chart-panel').classList.remove('open');
+  document.getElementById('chart-panel-body').innerHTML = '';
+}
+
+async function loadAndRenderChart(config, container) {
+  const panelMode = container === null;
+  let target = container;
+  if (panelMode) {
+    document.getElementById('chart-panel-title').textContent = config.title || '';
+    document.getElementById('chart-panel').classList.add('open');
+    target = document.getElementById('chart-panel-body');
+    target.innerHTML = '';
+  }
+  try {
+    const resp = await fetch(config.dataFile);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const fileData = await resp.json();
+    // story.json block fields override data file defaults
+    const merged = { ...fileData, ...config };
+    // Resolve palette colors for pre-binned histograms
+    if (merged.labels && merged.counts && config.categoryFamily && meta) {
+      const fam = meta.categories.find(c => c.name === config.categoryFamily);
+      if (fam) {
+        merged.colors = merged.labels.map(lbl => {
+          const li = fam.labels.indexOf(lbl);
+          if (li < 0) return '#4e79a7';
+          const [r, g, b] = getPaletteRgb(li);
+          return `rgb(${r},${g},${b})`;
+        });
+      }
+    }
+    renderChart(target, merged, fileData.data);
+  } catch (e) {
+    if (panelMode) hideChartPanel();
+    console.warn('Chart load failed:', e);
+  }
+}
+
+function renderChart(container, config, data) {
+  const type = config.chartType;
+  const isBinned = !!(config.labels && config.counts);
+  if (!type || (!data?.length && !isBinned)) return;
+
+  const W = container.clientWidth > 10 ? container.clientWidth : 266;
+  const isInline = config.placement === 'inline';
+  const H = isInline ? 130 : 190;
+  const margin = type === 'beeswarm'
+    ? { top: 8, right: 10, bottom: 26, left: 10 }
+    : isBinned
+    ? { top: 22, right: 10, bottom: 52, left: 36 }
+    : { top: 8, right: 10, bottom: 26, left: 34 };
+  const innerW = W - margin.left - margin.right;
+  const innerH = H - margin.top - margin.bottom;
+
+  const AXIS_COLOR = 'rgba(255,255,255,0.25)';
+  const BAR_COLOR  = '#4e79a7';
+  const TEXT_COLOR = 'rgba(255,255,255,0.72)';
+
+  container.innerHTML = '';
+  const svg = d3.select(container)
+    .append('svg')
+    .attr('width', W).attr('height', H)
+    .style('display', 'block');
+
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const styleAxis = ax => ax
+    .call(a => a.select('.domain').attr('stroke', AXIS_COLOR))
+    .call(a => a.selectAll('.tick line').attr('stroke', AXIS_COLOR))
+    .call(a => a.selectAll('text').attr('fill', TEXT_COLOR).attr('font-size', '11px'));
+
+  if (type === 'histogram') {
+    if (isBinned) {
+      const labels = config.labels;
+      const counts = config.counts;
+      const x = d3.scaleBand().domain(labels).range([0, innerW]).padding(0.12);
+      const yMax = config.yMax ?? d3.max(counts);
+      const y = d3.scaleLinear().domain([0, yMax]).range([innerH, 0]);
+
+      g.append('g').attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).tickSizeOuter(0))
+        .call(ax => {
+          ax.select('.domain').attr('stroke', AXIS_COLOR);
+          ax.selectAll('.tick line').attr('stroke', AXIS_COLOR);
+          ax.selectAll('text')
+            .attr('fill', TEXT_COLOR).attr('font-size', '11px')
+            .attr('transform', 'rotate(-40)')
+            .attr('text-anchor', 'end')
+            .attr('dx', '-0.4em').attr('dy', '0.15em');
+        });
+      styleAxis(g.append('g').call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('.2s'))));
+
+      g.selectAll('rect').data(counts).join('rect')
+        .attr('x', (_, i) => x(labels[i]))
+        .attr('width', x.bandwidth())
+        .attr('y', d => y(d))
+        .attr('height', d => innerH - y(d))
+        .attr('fill', (_, i) => config.colors?.[i] ?? BAR_COLOR)
+        .attr('opacity', 0.88);
+
+    } else {
+      const xMin = config.xMin ?? d3.min(data);
+      const xMax = config.xMax ?? d3.max(data);
+      const x = d3.scaleLinear().domain([xMin, xMax]).range([0, innerW]);
+      const bins = d3.bin().domain([xMin, xMax]).thresholds(config.bins ?? 20)(data);
+      const yMax = config.yMax ?? d3.max(bins, b => b.length);
+      const y = d3.scaleLinear().domain([0, yMax]).range([innerH, 0]);
+
+      styleAxis(g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(5)));
+      styleAxis(g.append('g').call(d3.axisLeft(y).ticks(4)));
+
+      g.selectAll('rect').data(bins).join('rect')
+        .attr('x', b => x(b.x0) + 1)
+        .attr('width', b => Math.max(0, x(b.x1) - x(b.x0) - 1))
+        .attr('y', b => y(b.length))
+        .attr('height', b => innerH - y(b.length))
+        .attr('fill', BAR_COLOR).attr('opacity', 0.75);
+    }
+
+    if (config.yLabel) {
+      svg.append('text')
+        .attr('x', margin.left)
+        .attr('y', margin.top - 7)
+        .attr('fill', TEXT_COLOR)
+        .attr('font-size', '11px')
+        .attr('text-anchor', 'start')
+        .text('↑ ' + config.yLabel);
+    }
+
+  } else if (type === 'beeswarm') {
+    const xMin = config.xMin ?? d3.min(data);
+    const xMax = config.xMax ?? d3.max(data);
+    const x = d3.scaleLinear().domain([xMin, xMax]).range([0, innerW]);
+    const r = config.radius ?? 3;
+    const midY = innerH / 2;
+
+    styleAxis(g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(5)));
+
+    const sample = data.length > 600
+      ? Array.from({ length: 600 }, (_, i) => data[Math.floor(i * data.length / 600)])
+      : data;
+    const nodes = sample.map(v => ({ tx: x(v), x: x(v), y: midY }));
+    const sim = d3.forceSimulation(nodes)
+      .force('x', d3.forceX(d => d.tx).strength(0.9))
+      .force('y', d3.forceY(midY).strength(0.05))
+      .force('collide', d3.forceCollide(r + 0.8))
+      .stop();
+    for (let i = 0; i < 150; i++) sim.tick();
+
+    g.selectAll('circle').data(nodes).join('circle')
+      .attr('cx', d => Math.max(r, Math.min(innerW - r, d.x)))
+      .attr('cy', d => Math.max(r, Math.min(innerH - r, d.y)))
+      .attr('r', r)
+      .attr('fill', BAR_COLOR).attr('opacity', 0.60);
+
+  } else if (type === 'line') {
+    const xVals = data.map(d => d[0]);
+    const yVals = data.map(d => d[1]);
+    const x = d3.scaleLinear()
+      .domain([config.xMin ?? d3.min(xVals), config.xMax ?? d3.max(xVals)])
+      .range([0, innerW]);
+    const y = d3.scaleLinear()
+      .domain([config.yMin ?? d3.min(yVals), config.yMax ?? d3.max(yVals)])
+      .range([innerH, 0]);
+
+    styleAxis(g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(5)));
+    styleAxis(g.append('g').call(d3.axisLeft(y).ticks(4)));
+
+    g.append('path').datum(data)
+      .attr('fill', 'none').attr('stroke', BAR_COLOR).attr('stroke-width', 1.5)
+      .attr('d', d3.line().x(d => x(d[0])).y(d => y(d[1])));
+
+    if (config.yLabel) {
+      svg.append('text')
+        .attr('x', margin.left)
+        .attr('y', margin.top - 7)
+        .attr('fill', TEXT_COLOR)
+        .attr('font-size', '11px')
+        .attr('text-anchor', 'start')
+        .text('↑ ' + config.yLabel);
+    }
+
+  } else if (type === 'scatter') {
+    const xVals = data.map(d => d[0]);
+    const yVals = data.map(d => d[1]);
+    const x = d3.scaleLinear()
+      .domain([config.xMin ?? d3.min(xVals), config.xMax ?? d3.max(xVals)])
+      .range([0, innerW]);
+    const y = d3.scaleLinear()
+      .domain([config.yMin ?? d3.min(yVals), config.yMax ?? d3.max(yVals)])
+      .range([innerH, 0]);
+
+    styleAxis(g.append('g').attr('transform', `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(5)));
+    styleAxis(g.append('g').call(d3.axisLeft(y).ticks(4)));
+
+    g.selectAll('circle').data(data).join('circle')
+      .attr('cx', d => x(d[0])).attr('cy', d => y(d[1]))
+      .attr('r', 2.5).attr('fill', BAR_COLOR).attr('opacity', 0.55);
+
+    if (config.yLabel) {
+      svg.append('text')
+        .attr('x', margin.left)
+        .attr('y', margin.top - 7)
+        .attr('fill', TEXT_COLOR)
+        .attr('font-size', '11px')
+        .attr('text-anchor', 'start')
+        .text('↑ ' + config.yLabel);
+    }
+  }
+
+  if (config.xLabel) {
+    svg.append('text')
+      .attr('x', margin.left + innerW / 2).attr('y', H - 2)
+      .attr('text-anchor', 'middle').attr('fill', TEXT_COLOR).attr('font-size', '11px')
+      .text(config.xLabel);
+  }
+}
+
+// ── Explore chart stubs (Phase 2) ─────────────────────────────────────────────
+function showRecipeChart(recipeId) { /* TODO Phase 2 */ }
+function showClusterChart(clusterId) { /* TODO Phase 2 */ }
+
 // ── Left panel: story mode ────────────────────────────────────────────────────
 function applyStep(step) {
   // Switch category family
@@ -859,10 +1103,41 @@ function applyStep(step) {
   if (step.camera) {
     animateCameraToPosition(step.camera.position, step.camera.target);
   }
-  // Update panel text
-  document.getElementById('story-title').textContent    = step.title    || '';
-  document.getElementById('story-subtitle').textContent = step.subtitle || '';
-  document.getElementById('story-counter').textContent  =
+  // Render content blocks
+  const contentEl = document.getElementById('story-content');
+  contentEl.innerHTML = '';
+  let panelChartBlock = null;
+
+  for (const block of step.content ?? []) {
+    if (block.type === 'text') {
+      const el = document.createElement('p');
+      el.className = `story-${block.style || 'body'}`;
+      el.textContent = block.value || '';
+      contentEl.appendChild(el);
+    } else if (block.type === 'description') {
+      const el = document.createElement('p');
+      el.className = 'story-description';
+      el.textContent = block.value || '';
+      contentEl.appendChild(el);
+    } else if (block.type === 'chart') {
+      if (block.placement === 'inline') {
+        const wrap = document.createElement('div');
+        wrap.className = 'story-chart-inline';
+        contentEl.appendChild(wrap);
+        loadAndRenderChart(block, wrap);
+      } else {
+        panelChartBlock = block;
+      }
+    }
+  }
+
+  if (panelChartBlock) {
+    loadAndRenderChart(panelChartBlock, null);
+  } else {
+    hideChartPanel();
+  }
+
+  document.getElementById('story-counter').textContent =
     `${currentStep + 1} / ${storyData.steps.length}`;
 
   document.getElementById('btn-prev').disabled = currentStep === 0;
@@ -895,35 +1170,61 @@ function setMode(mode) {
     showExploreDefault();
     lockedIdx = -1;
     hideHoverTip();
+    hideChartPanel();
   } else {
     applyStep(storyData.steps[currentStep]);
   }
 }
 
-// ── Debug: copy state ─────────────────────────────────────────────────────────
-function copyState() {
-  const pos    = camera.position;
-  const target = controls.target;
-  const family = meta.categories[activeFamilyIdx];
-  const hl     = highlightedLabelIdx >= 0
-    ? { family: family.name, label: family.labels[highlightedLabelIdx] }
-    : null;
+// ── Share ─────────────────────────────────────────────────────────────────────
+function buildShareUrl() {
+  const params = new URLSearchParams();
+  params.set('mode', appMode);
+  if (appMode === 'story') {
+    params.set('step', currentStep);
+  } else {
+    const pos    = camera.position;
+    const target = controls.target;
+    params.set('cam', [pos.x, pos.y, pos.z, target.x, target.y, target.z]
+      .map(v => v.toFixed(3)).join(','));
+    params.set('family', activeFamilyIdx);
+    if (highlightedLabelIdx >= 0) params.set('hl', highlightedLabelIdx);
+  }
+  return `${location.origin}${location.pathname}#${params.toString()}`;
+}
 
-  const snippet = {
-    title:     '',
-    subtitle:  '',
-    colorBy:   family.name,
-    // position is reconstructed from quaternion + distance — store the visual position
-    camera: {
-      position: [+pos.x.toFixed(3), +pos.y.toFixed(3), +pos.z.toFixed(3)],
-      target:   [+target.x.toFixed(3), +target.y.toFixed(3), +target.z.toFixed(3)],
-    },
-    highlight: hl,
-  };
+function applyShareState() {
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  const params = new URLSearchParams(hash);
+  const mode   = params.get('mode') ?? 'story';
 
-  navigator.clipboard.writeText(JSON.stringify(snippet, null, 2))
-    .then(() => alert('Story step snippet copied to clipboard.'))
-    .catch(() => console.log(JSON.stringify(snippet, null, 2)));
+  if (mode === 'story') {
+    const step = Math.max(0, Math.min(
+      parseInt(params.get('step') ?? '0'), storyData.steps.length - 1
+    ));
+    currentStep = step;
+    setMode('story');
+  } else {
+    setMode('explore');
+    const family = params.get('family');
+    if (family !== null) {
+      const familyIdx = parseInt(family);
+      setActiveFamily(familyIdx);
+      document.querySelectorAll('.cat-tab').forEach((btn, i) => {
+        btn.classList.toggle('active', i === familyIdx);
+      });
+    }
+    const hl = params.get('hl');
+    if (hl !== null) setHighlightLabel(parseInt(hl));
+    const camStr = params.get('cam');
+    if (camStr) {
+      const [px, py, pz, tx, ty, tz] = camStr.split(',').map(Number);
+      animateCameraToPosition([px, py, pz], [tx, ty, tz]);
+    }
+  }
+
+  history.replaceState(null, '', location.pathname);
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
@@ -1023,12 +1324,41 @@ async function boot() {
       document.getElementById('about-overlay').classList.remove('open');
   });
 
-  // Debug copy state
-  document.getElementById('btn-copy-state').addEventListener('click', copyState);
+  // Share popup
+  const sharePopup   = document.getElementById('share-popup');
+  const shareUrlInput = document.getElementById('share-url');
+  const shareInclude  = document.getElementById('share-include-view');
+  const plainUrl      = `${location.origin}${location.pathname}`;
+
+  const refreshShareUrl = () => {
+    shareUrlInput.value = shareInclude.checked ? buildShareUrl() : plainUrl;
+  };
+
+  document.getElementById('btn-share').addEventListener('click', () => {
+    refreshShareUrl();
+    sharePopup.classList.toggle('open');
+  });
+  shareInclude.addEventListener('change', refreshShareUrl);
+  document.getElementById('share-copy').addEventListener('click', () => {
+    navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+      const btn = document.getElementById('share-copy');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    });
+  });
+  document.getElementById('share-close').addEventListener('click', () => {
+    sharePopup.classList.remove('open');
+  });
+  document.addEventListener('click', e => {
+    if (!sharePopup.contains(e.target) && e.target !== document.getElementById('btn-share'))
+      sharePopup.classList.remove('open');
+  });
+
 
   // Story mode default
   initStoryPanel();
   setMode('story');
+  applyShareState();
 
   hideProgress();
 }

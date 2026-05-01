@@ -1,0 +1,6 @@
+{
+  "chartType": "histogram",
+  "labels": ["no rating", "1 star", "2 stars", "3 stars", "4 stars", "4.5 stars", "4.8 stars", "5 stars"],
+  "counts": [5047, 1454, 2354, 13067, 46335, 39507, 13825, 110048],
+  "yLabel": "Recipes"
+}
