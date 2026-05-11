@@ -1,0 +1,99 @@
+{
+  "avg_rating": {
+    "no rating": "avg_rating_no-rating.json.gz",
+    "1 star": "avg_rating_1-star.json.gz",
+    "2 stars": "avg_rating_2-stars.json.gz",
+    "3 stars": "avg_rating_3-stars.json.gz",
+    "4 stars": "avg_rating_4-stars.json.gz",
+    "4.5 stars": "avg_rating_4.5-stars.json.gz",
+    "4.8 stars": "avg_rating_4.8-stars.json.gz",
+    "5 stars": "avg_rating_5-stars.json.gz"
+  },
+  "cuisines": {
+    "african": "cuisines_african.json.gz",
+    "american": "cuisines_american.json.gz",
+    "australian": "cuisines_australian.json.gz",
+    "cajun": "cuisines_cajun.json.gz",
+    "canadian": "cuisines_canadian.json.gz",
+    "caribbean": "cuisines_caribbean.json.gz",
+    "central-american": "cuisines_central-american.json.gz",
+    "chinese": "cuisines_chinese.json.gz",
+    "english": "cuisines_english.json.gz",
+    "french": "cuisines_french.json.gz",
+    "german": "cuisines_german.json.gz",
+    "greek": "cuisines_greek.json.gz",
+    "indian": "cuisines_indian.json.gz",
+    "italian": "cuisines_italian.json.gz",
+    "mexican": "cuisines_mexican.json.gz",
+    "middle-eastern": "cuisines_middle-eastern.json.gz",
+    "midwestern": "cuisines_midwestern.json.gz",
+    "northeastern-united-states": "cuisines_northeastern-united-states.json.gz",
+    "scandinavian": "cuisines_scandinavian.json.gz",
+    "south-american": "cuisines_south-american.json.gz",
+    "southern-united-states": "cuisines_southern-united-states.json.gz",
+    "southwestern-united-states": "cuisines_southwestern-united-states.json.gz",
+    "spanish": "cuisines_spanish.json.gz",
+    "tex-mex": "cuisines_tex-mex.json.gz",
+    "thai": "cuisines_thai.json.gz"
+  },
+  "meal_types": {
+    "appetizers": "meal_types_appetizers.json.gz",
+    "beverages": "meal_types_beverages.json.gz",
+    "desserts": "meal_types_desserts.json.gz",
+    "main-dish": "meal_types_main-dish.json.gz",
+    "side-dishes": "meal_types_side-dishes.json.gz"
+  },
+  "minutes": {
+    "<15 minutes": "minutes_lt15-minutes.json.gz",
+    "16-30 minutes": "minutes_16-30-minutes.json.gz",
+    "31-60 minutes": "minutes_31-60-minutes.json.gz",
+    "1-2 hours": "minutes_1-2-hours.json.gz",
+    "2-4 hours": "minutes_2-4-hours.json.gz",
+    "4+ hours": "minutes_4plus-hours.json.gz"
+  },
+  "n_ingredients": {
+    "<5 ingredients": "n_ingredients_lt5-ingredients.json.gz",
+    "5-10 ingredients": "n_ingredients_5-10-ingredients.json.gz",
+    "11-20 ingredients": "n_ingredients_11-20-ingredients.json.gz",
+    "20+ ingredients": "n_ingredients_20plus-ingredients.json.gz"
+  },
+  "n_ratings": {
+    "no ratings": "n_ratings_no-ratings.json.gz",
+    "1 ratings": "n_ratings_1-ratings.json.gz",
+    "2-5 ratings": "n_ratings_2-5-ratings.json.gz",
+    "6-10 ratings": "n_ratings_6-10-ratings.json.gz",
+    "11-20 ratings": "n_ratings_11-20-ratings.json.gz",
+    "21-50 ratings": "n_ratings_21-50-ratings.json.gz",
+    "51-100 ratings": "n_ratings_51-100-ratings.json.gz",
+    "100+ ratings": "n_ratings_100plus-ratings.json.gz"
+  },
+  "n_steps": {
+    "1-5 steps": "n_steps_1-5-steps.json.gz",
+    "6-10 steps": "n_steps_6-10-steps.json.gz",
+    "11-15 steps": "n_steps_11-15-steps.json.gz",
+    "16-20 steps": "n_steps_16-20-steps.json.gz",
+    "20+ steps": "n_steps_20plus-steps.json.gz"
+  },
+  "submitted": {
+    "1999": "submitted_1999.json.gz",
+    "2000": "submitted_2000.json.gz",
+    "2001": "submitted_2001.json.gz",
+    "2002": "submitted_2002.json.gz",
+    "2003": "submitted_2003.json.gz",
+    "2004": "submitted_2004.json.gz",
+    "2005": "submitted_2005.json.gz",
+    "2006": "submitted_2006.json.gz",
+    "2007": "submitted_2007.json.gz",
+    "2008": "submitted_2008.json.gz",
+    "2009": "submitted_2009.json.gz",
+    "2010": "submitted_2010.json.gz",
+    "2011": "submitted_2011.json.gz",
+    "2012": "submitted_2012.json.gz",
+    "2013": "submitted_2013.json.gz",
+    "2014": "submitted_2014.json.gz",
+    "2015": "submitted_2015.json.gz",
+    "2016": "submitted_2016.json.gz",
+    "2017": "submitted_2017.json.gz",
+    "2018": "submitted_2018.json.gz"
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "total": 231637,
+  "n_chunks": 464,
+  "chunk_size": 500,
+  "coord_bounds": {
+    "min": [
+      -3.9166548252105713,
+      -4.155576705932617,
+      -0.14720101654529572
+    ],
+    "max": [
+      10.640226364135742,
+      6.805360317230225,
+      9.155567169189453
+    ]
+  },
+  "attribute_layout": [
+    {
+      "name": "recipe_id",
+      "dtype": "uint32"
+    },
+    {
+      "name": "chunk_id",
+      "dtype": "uint16"
+    },
+    {
+      "name": "avg_rating",
+      "dtype": "uint8"
+    },
+    {
+      "name": "cuisines",
+      "dtype": "uint8"
+    },
+    {
+      "name": "meal_types",
+      "dtype": "uint8"
+    },
+    {
+      "name": "minutes",
+      "dtype": "uint8"
+    },
+    {
+      "name": "n_ingredients",
+      "dtype": "uint8"
+    },
+    {
+      "name": "n_ratings",
+      "dtype": "uint8"
+    },
+    {
+      "name": "n_steps",
+      "dtype": "uint8"
+    },
+    {
+      "name": "submitted",
+      "dtype": "uint8"
+    }
+  ],
+  "categories": [
+    {
+      "name": "avg_rating",
+      "attribute": "avg_rating",
+      "labels": [
+        "no rating",
+        "1 star",
+        "2 stars",
+        "3 stars",
+        "4 stars",
+        "4.5 stars",
+        "4.8 stars",
+        "5 stars"
+      ]
+    },
+    {
+      "name": "cuisines",
+      "attribute": "cuisines",
+      "labels": [
+        "african",
+        "american",
+        "australian",
+        "cajun",
+        "canadian",
+        "caribbean",
+        "central-american",
+        "chinese",
+        "english",
+        "french",
+        "german",
+        "greek",
+        "indian",
+        "italian",
+        "mexican",
+        "middle-eastern",
+        "midwestern",
+        "northeastern-united-states",
+        "scandinavian",
+        "south-american",
+        "southern-united-states",
+        "southwestern-united-states",
+        "spanish",
+        "tex-mex",
+        "thai"
+      ]
+    },
+    {
+      "name": "meal_types",
+      "attribute": "meal_types",
+      "labels": [
+        "appetizers",
+        "beverages",
+        "desserts",
+        "main-dish",
+        "side-dishes"
+      ]
+    },
+    {
+      "name": "minutes",
+      "attribute": "minutes",
+      "labels": [
+        "<15 minutes",
+        "16-30 minutes",
+        "31-60 minutes",
+        "1-2 hours",
+        "2-4 hours",
+        "4+ hours"
+      ]
+    },
+    {
+      "name": "n_ingredients",
+      "attribute": "n_ingredients",
+      "labels": [
+        "<5 ingredients",
+        "5-10 ingredients",
+        "11-20 ingredients",
+        "20+ ingredients"
+      ]
+    },
+    {
+      "name": "n_ratings",
+      "attribute": "n_ratings",
+      "labels": [
+        "no ratings",
+        "1 ratings",
+        "2-5 ratings",
+        "6-10 ratings",
+        "11-20 ratings",
+        "21-50 ratings",
+        "51-100 ratings",
+        "100+ ratings"
+      ]
+    },
+    {
+      "name": "n_steps",
+      "attribute": "n_steps",
+      "labels": [
+        "1-5 steps",
+        "6-10 steps",
+        "11-15 steps",
+        "16-20 steps",
+        "20+ steps"
+      ]
+    },
+    {
+      "name": "submitted",
+      "attribute": "submitted",
+      "labels": [
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ]
+    }
+  ],
+  "scalar_attributes": []
+}

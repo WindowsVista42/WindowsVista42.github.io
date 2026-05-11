@@ -1,0 +1,127 @@
+{
+  "steps": [
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [10.631, 6.334, 14.849], "target": [4.453, -0.402, 4.086] },
+      "highlight": null,
+      "categorySubtitle": "25 regional cuisines",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Welcome!" },
+        { "type": "text", "style": "body", "value": "This is a visualization showing ~230,000 recipes from Food.com! Every point represents a recipe organized by its similarity to other recipes. When you organize data like this, some interesting things pop out that we want to tell you about! When you're ready, click next to see more, or you can click \"Explore\" at the top to freely look around." },
+        { "type": "text", "style": "caption", "value": "Have fun!" }
+      ]
+    },
+    {
+      "colorBy": "meal_types",
+      "camera": { "position": [8.215, 6.273, 14.438], "target": [4.556, -0.331, 4.607] },
+      "highlight": null,
+      "categorySubtitle": "Two distinct halves",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Two Primary Clusters" },
+        { "type": "text", "style": "body", "value": "The first thing you might notice is that recipes fall into two distinct groups. One side is home to main dishes, side dishes, and appetizers. The other holds desserts and beverages. This divide runs through almost everything else we're going to show you." }
+      ]
+    },
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [10.654, 5.665, 13.952], "target": [4.841, -0.091, 4.605] },
+      "highlight": ["american", "cajun", "midwestern", "northeastern-united-states", "southern-united-states", "southwestern-united-states", "tex-mex"],
+      "categorySubtitle": "70,000+ recipes",
+      "content": [
+        { "type": "text", "style": "heading", "value": "American Cuisine" },
+        { "type": "text", "style": "body", "value": "American cuisine makes up the largest group of related clusters in the dataset, with over 70,000 recipes spanning a wide range of sub-cuisines. From Southern comfort food like green bean casserole to West Coast classics like animal-style fries, American cooking covers a lot of ground. You can see the main dish and dessert divide from the previous page showing up here too." }
+      ]
+    },
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [-3.122, 2.408, -2.976], "target": [0.385, -0.515, 2.031] },
+      "highlight": "italian",
+      "categorySubtitle": "The largest individual cuisine",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Italian Cuisine" },
+        { "type": "text", "style": "body", "value": "Italian is the single largest individual cuisine cluster, and it has a distinctive shape. The recipes fan outward into their own distinct sub-clusters. Each tip of the shape tells a different story. Take some time to hover around and see what you find." }
+      ]
+    },
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [6.138, 0.996, 4.881], "target": [5.994, 0.694, 4.343] },
+      "highlight": "french",
+      "categorySubtitle": "Is it really French?",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Is French Toast French?" },
+        { "type": "text", "style": "body", "value": "The algorithm we used seems to think so. Recipes from neighboring regions look more similar than you might expect, and the line between cuisines gets blurry fast. We actually had to exaggerate the scale of cuisine groupings in this visualization just to make them show up at all." }
+      ]
+    },
+    {
+      "colorBy": "minutes",
+      "camera": { "position": [-0.942, 3.475, 2.770], "target": [-0.703, 2.158, 5.530] },
+      "highlight": "4+ hours",
+      "categorySubtitle": "From quick bites to all-day cooks",
+      "content": [
+        { "type": "text", "style": "heading", "value": "The Longest Recipes" },
+        { "type": "text", "style": "body", "value": "Sorting by cook time, a distinct cluster emerges at the 4+ hour mark. It's almost entirely soups, stews, chilis, and a remarkable number of crock pot recipes. The longest recipes on Food.com are not elaborate showpieces. They're the ones that simmer all day while you do something else." }
+      ]
+    },
+    {
+      "colorBy": "avg_rating",
+      "camera": { "position": [8.253, 6.556, -3.419], "target": [5.300, 1.712, 3.615] },
+      "highlight": "4.8 stars",
+      "categorySubtitle": "The genuinely well-loved",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Recipes People Really Liked" },
+        { "type": "text", "style": "body", "value": "A recipe with a single glowing review is technically a 5-star recipe. The more meaningful signal is recipes between 4.8 and 5 stars across many reviews. Those are the ones people kept coming back to rate. This cluster is where the genuinely well-loved recipes live." }
+      ]
+    },
+    {
+      "colorBy": "avg_rating",
+      "camera": { "position": [9.029, 1.714, -5.130], "target": [4.456, 0.193, 3.600] },
+      "highlight": "5 stars",
+      "lockedRecipe": 83966,
+      "categorySubtitle": "One of a kind, out of many",
+      "content": [
+        { "type": "text", "style": "heading", "value": "The Holy Grail" },
+        { "type": "text", "style": "body", "value": "Bacon Lattice Tomato Muffins has over 100 ratings and a perfect 5-star average, which in this dataset makes it one of a kind. Most recipes that reach that rating count drift below 5 stars under the weight of opinions. This one held. It also happens to be an RSC recipe, which you'll see more of shortly." },
+        { "type": "link", "value": "↗ View recipe on Food.com", "href": "https://www.food.com/recipe/bacon-lattice-tomato-muffins-rsc-486496" }
+      ]
+    },
+    {
+      "colorBy": "submitted",
+      "camera": { "position": [1.439, 0.423, 6.648], "target": [-0.493, -0.784, 4.157] },
+      "highlight": "2013",
+      "categorySubtitle": "Ready, Set, Cook!",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Ready, Set, Cook!" },
+        { "type": "text", "style": "body", "value": "Scattered throughout the dataset is a surprisingly large number of recipes with RSC in the title. This stands for Ready, Set, Cook!, a recurring Food.com community contest sponsored by Hidden Valley Ranch. The competition ran for multiple seasons and generated thousands of entries. You'll see many more throughout this dataset if you keep looking." }
+      ]
+    },
+    {
+      "colorBy": "submitted",
+      "camera": { "position": [7.925, 5.066, 14.805], "target": [4.490, -0.545, 5.300] },
+      "highlight": null,
+      "categorySubtitle": "A snapshot of an era",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Peak Food.com" },
+        { "type": "text", "style": "body", "value": "Food.com saw its peak recipe submission activity around 2008, right in the middle of the financial crisis. People cooking at home more? Possibly. Submissions tapered off significantly after that, but the dataset we used only contains entries until 2018 and is missing data even before then. What you're seeing is a snapshot of a specific era of internet home cooking." }
+      ]
+    },
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [10.957, 9.330, 2.658], "target": [7.976, 6.322, 4.840] },
+      "highlight": "english",
+      "categorySubtitle": "Scones, spotted",
+      "content": [
+        { "type": "text", "style": "heading", "value": "We Found Some Scones" },
+        { "type": "text", "style": "body", "value": "Up here, on their own little island, a quiet colony of English recipes has made itself at home. Nobody asked them to be this far from everything else. Nobody planned for this. Scones, clotted cream, blueberry something-or-other, all bobbing together serenely in the upper reaches of the point cloud. Hover over them. They're delightful." }
+      ]
+    },
+    {
+      "colorBy": "cuisines",
+      "camera": { "position": [10.631, 6.334, 14.849], "target": [4.453, -0.402, 4.086] },
+      "highlight": null,
+      "categorySubtitle": "25 regional cuisines",
+      "content": [
+        { "type": "text", "style": "heading", "value": "Explore!" },
+        { "type": "text", "style": "body", "value": "That's what we found most interesting, but there's a lot more in here if you're curious! Switch to Explore at the top to browse freely, click any recipe to learn more, and see what you can find." }
+      ]
+    }
+  ]
+}

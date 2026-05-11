@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food.com Recipe Explorer</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ── Top bar ── -->
+  <div id="topbar">
+    <div class="topbar-left">
+      <span id="site-title"><span class="title-accent"></span>Food.com Recipe Explorer</span>
+    </div>
+    <div class="topbar-center">
+      <button class="mode-btn active" id="btn-story">Story</button>
+      <button class="mode-btn" id="btn-explore">Explore</button>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" id="btn-share">Share</button>
+      <button class="topbar-btn" id="btn-about">About</button>
+    </div>
+  </div>
+
+  <!-- ── 3D canvas ── -->
+  <canvas id="three-canvas"></canvas>
+
+  <!-- ── Explore default: floats over canvas, no panel background ── -->
+  <div id="explore-default">
+    <h2 class="explore-title">Explore Recipes</h2>
+    <p class="explore-blurb">~230,000 recipes from Food.com, arranged by semantic similarity.</p>
+    <div class="explore-hints">
+      <p><strong>Left-click drag</strong> to rotate</p>
+      <p><strong>Right-click drag</strong> to pan</p>
+      <p><strong>Scroll</strong> to zoom</p>
+      <hr class="explore-divider">
+      <p><strong>Hover a point</strong> for a tooltip</p>
+      <p><strong>Click a point</strong> for recipe info</p>
+      <p><strong>Double-click a point</strong> to isolate its cluster</p>
+    </div>
+  </div>
+
+  <!-- ── Left panel ── -->
+  <div id="left-panel">
+
+    <!-- Story mode -->
+    <div id="story-panel">
+      <div id="story-content"></div>
+      <div id="story-progress"><div id="story-progress-fill"></div></div>
+      <div id="story-nav">
+        <button class="nav-btn" id="btn-prev">&#8592; Prev</button>
+        <span id="story-counter"></span>
+        <button class="nav-btn" id="btn-next">Next &#8594;</button>
+      </div>
+    </div>
+
+    <!-- Explore mode -->
+    <div id="explore-panel">
+      <div id="explore-content">
+        <div id="explore-recipe">
+          <div id="recipe-name"></div>
+          <div id="recipe-tags"></div>
+          <div id="recipe-stats"></div>
+          <div class="recipe-section-label">Ingredients</div>
+          <div id="recipe-ingredients"></div>
+          <div class="recipe-section-label">Description</div>
+          <div id="recipe-description"></div>
+          <a id="recipe-link" target="_blank" rel="noopener noreferrer">↗ Find on Food.com</a>
+        </div>
+      </div>
+      <div id="recipe-chart-btns"></div>
+      <div id="left-panel-chart-view">
+        <div id="left-panel-chart-header">
+          <button id="btn-chart-back">&#8592; Back</button>
+          <span id="left-panel-chart-title"></span>
+        </div>
+        <div id="left-panel-chart-body"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Randomize button (explore mode only) ── -->
+  <button id="btn-randomize">Surprise Me</button>
+
+  <!-- ── Right column ── -->
+  <div id="right-column">
+
+    <div id="right-panel">
+      <div id="right-panel-title">Categories</div>
+      <div id="right-panel-subtitle"></div>
+      <div id="breadcrumb-bar"></div>
+      <div id="category-tabs"></div>
+      <div id="right-panel-chart"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Hover tooltip ── -->
+  <div id="hover-tip">
+    <div id="hover-tip-arrow"></div>
+    <div id="hover-tip-inner">
+      <div class="ht-name"></div>
+      <div class="ht-tags"></div>
+      <div class="ht-meta"></div>
+      <div class="ht-desc"></div>
+    </div>
+  </div>
+
+  <!-- ── Progress ── -->
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label">Loading&hellip;</div>
+
+  <!-- ── About modal ── -->
+  <div id="about-overlay">
+    <div id="about-modal">
+      <button id="about-close">✕</button>
+      <h2>Food.com Recipe Explorer</h2>
+      <p>~230,000 recipes from Food.com projected into 3D using UMAP on semantic embeddings. Each point represents a recipe. Proximity indicates semantic similarity.</p>
+      <p>Dataset: <a href="https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions" target="_blank">Food.com Recipes and Interactions</a></p>
+      <p>Source: <a href="https://github.com/WindowsVista42/UMBC-Data-Vis" target="_blank">GitHub</a></p>
+    </div>
+  </div>
+
+  <!-- ── Share popup ── -->
+  <div id="share-popup">
+    <button id="share-close">✕</button>
+    <span id="share-title">Share</span>
+    <div id="share-url-row">
+      <input id="share-url" type="text" readonly>
+      <button id="share-copy">Copy</button>
+    </div>
+    <label id="share-view-label">
+      <input type="checkbox" id="share-include-view" checked> Include current view
+    </label>
+  </div>
+
+  <!-- ── Chart panel (story mode only) ── -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script type="module" src="app.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+</body>
+</html>
